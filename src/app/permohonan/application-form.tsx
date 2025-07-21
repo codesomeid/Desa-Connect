@@ -1,0 +1,179 @@
+"use client";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
+
+const formSchema = z.object({
+  fullName: z.string().min(3, { message: "Nama lengkap minimal 3 karakter." }),
+  nik: z.string().length(16, { message: "NIK harus terdiri dari 16 digit." }),
+  letterType: z.string({
+    required_error: "Silakan pilih jenis surat.",
+  }),
+  purpose: z.string().min(10, { message: "Keperluan minimal 10 karakter." }),
+});
+
+export function ApplicationForm() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [applicationId, setApplicationId] = useState("");
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      fullName: "",
+      nik: "",
+      purpose: "",
+    },
+  });
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsSubmitting(true);
+    console.log(values);
+
+    // Simulate API call
+    setTimeout(() => {
+      const newId = `DS-CNCT-${Date.now()}`;
+      setApplicationId(newId);
+      setShowSuccessDialog(true);
+      setIsSubmitting(false);
+      form.reset();
+    }, 1500);
+  }
+
+  return (
+    <>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <FormField
+            control={form.control}
+            name="fullName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nama Lengkap</FormLabel>
+                <FormControl>
+                  <Input placeholder="Contoh: Budi Santoso" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="nik"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nomor Induk Kependudukan (NIK)</FormLabel>
+                <FormControl>
+                  <Input placeholder="Masukkan 16 digit NIK Anda" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="letterType"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Jenis Surat</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Pilih jenis surat yang diajukan" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="Surat Keterangan Usaha">Surat Keterangan Usaha</SelectItem>
+                    <SelectItem value="Surat Keterangan Domisili">Surat Keterangan Domisili</SelectItem>
+                    <SelectItem value="Surat Keterangan Tidak Mampu">Surat Keterangan Tidak Mampu</SelectItem>
+                    <SelectItem value="Lainnya">Lainnya</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="purpose"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Keperluan</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Jelaskan keperluan Anda untuk surat ini"
+                    className="resize-none"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type="submit" className="w-full bg-accent hover:bg-accent/90" disabled={isSubmitting}>
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Mengajukan...
+              </>
+            ) : (
+              "Ajukan Permohonan"
+            )}
+          </Button>
+        </form>
+      </Form>
+      <AlertDialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Permohonan Berhasil Diajukan!</AlertDialogTitle>
+            <AlertDialogDescription>
+              Permohonan Anda telah kami terima. Silakan simpan nomor pelacakan Anda. Anda dapat melacak status permohonan Anda di halaman 'Lacak Permohonan'.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="my-4 p-4 bg-muted rounded-lg text-center">
+            <p className="text-sm text-muted-foreground">Nomor Pelacakan Anda</p>
+            <p className="text-lg font-bold text-accent">{applicationId}</p>
+          </div>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={() => setShowSuccessDialog(false)}>
+              Mengerti
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
+  );
+}
