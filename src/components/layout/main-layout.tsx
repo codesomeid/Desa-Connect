@@ -1,11 +1,22 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { SidebarProvider, Sidebar, SidebarInset, SidebarHeader, SidebarContent, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider, Sidebar, SidebarInset, SidebarHeader, SidebarContent, SidebarTrigger, SidebarFooter } from "@/components/ui/sidebar";
 import { SidebarNav } from "./sidebar-nav";
-import { Leaf } from "lucide-react";
+import { Leaf, LogOut } from "lucide-react";
+import { Separator } from "../ui/separator";
+import { Button } from "../ui/button";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export function MainLayout({ children }: { children: ReactNode }) {
+  const router = useRouter();
+
+  const handleLogout = () => {
+    // In a real app, you would clear the session/token here
+    router.push('/login');
+  };
+
   return (
     <SidebarProvider>
       <Sidebar>
@@ -20,6 +31,13 @@ export function MainLayout({ children }: { children: ReactNode }) {
         <SidebarContent>
           <SidebarNav />
         </SidebarContent>
+        <SidebarFooter className="p-4">
+          <Separator className="my-2 bg-sidebar-border" />
+          <Button variant="ghost" className="w-full justify-start" onClick={handleLogout}>
+            <LogOut />
+            <span>Keluar</span>
+          </Button>
+        </SidebarFooter>
       </Sidebar>
       <SidebarInset>
         <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background/80 backdrop-blur-sm px-6 md:hidden">

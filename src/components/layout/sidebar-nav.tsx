@@ -2,14 +2,15 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { Megaphone, Users, FileText, ListChecks } from "lucide-react";
+import { Megaphone, Users, FileText, ListChecks, UserCircle } from "lucide-react";
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
 
 const navItems = [
   { href: "/", label: "Pengumuman", icon: Megaphone },
-  { href: "/kontak", label: "Kontak Penting", icon: Users },
   { href: "/permohonan", label: "Permohonan Surat", icon: FileText },
   { href: "/lacak", label: "Lacak Permohonan", icon: ListChecks },
+  { href: "/kontak", label: "Kontak Penting", icon: Users },
+  { href: "/profil", label: "Profil Saya", icon: UserCircle },
 ];
 
 export function SidebarNav() {
