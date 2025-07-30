@@ -50,7 +50,7 @@ export function LoginForm() {
     // Simulate login
     setTimeout(() => {
       // In a real app, you would call your auth provider here.
-      if (values.email && values.password) {
+      if (values.email === "warga@desa.com" && values.password === "warga123") {
         toast({
           title: "Login Berhasil",
           description: "Selamat datang kembali!",
@@ -87,7 +87,7 @@ export function LoginForm() {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="email@contoh.com" {...field} />
+                    <Input placeholder="warga@desa.com" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -100,7 +100,7 @@ export function LoginForm() {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="******" {...field} />
+                    <Input type="password" placeholder="warga123" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
