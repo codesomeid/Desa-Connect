@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { MainLayout } from "./main-layout";
 import { ReactNode } from "react";
 
-const publicRoutes = ["/login", "/register"];
+const publicRoutes = ["/login", "/register", "/login/warga", "/login/aparatur"];
 
 export function AuthLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
