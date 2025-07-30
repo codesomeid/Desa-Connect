@@ -100,7 +100,7 @@ export function AparaturLoginForm() {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="******" {...field} />
+                    <Input type="password" placeholder="admin123" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
