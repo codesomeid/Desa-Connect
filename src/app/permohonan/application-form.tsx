@@ -30,7 +30,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
@@ -42,7 +42,7 @@ const formSchema = z.object({
   purpose: z.string().min(10, { message: "Keperluan minimal 10 karakter." }),
 });
 
-export function ApplicationForm() {
+export function ApplicationForm({ selectedLetterType }: { selectedLetterType?: string }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [applicationId, setApplicationId] = useState("");
@@ -52,9 +52,17 @@ export function ApplicationForm() {
     defaultValues: {
       fullName: "",
       nik: "",
+      letterType: selectedLetterType,
       purpose: "",
     },
   });
+
+  useEffect(() => {
+    if (selectedLetterType) {
+        form.setValue("letterType", selectedLetterType);
+    }
+  }, [selectedLetterType, form]);
+
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
@@ -109,6 +117,8 @@ export function ApplicationForm() {
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
+                  value={field.value}
+                  disabled={!!selectedLetterType}
                 >
                   <FormControl>
                     <SelectTrigger>
