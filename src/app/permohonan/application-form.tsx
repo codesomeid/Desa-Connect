@@ -33,9 +33,16 @@ import {
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 
+// Dummy user data, assuming user is logged in.
+// In a real app, this would come from an auth context or session.
+const loggedInUser = {
+  fullName: "Budi Santoso",
+  nik: "3501234567890001",
+};
+
 const formSchema = z.object({
-  fullName: z.string().min(3, { message: "Nama lengkap minimal 3 karakter." }),
-  nik: z.string().length(16, { message: "NIK harus terdiri dari 16 digit." }),
+  fullName: z.string(),
+  nik: z.string(),
   letterType: z.string({
     required_error: "Silakan pilih jenis surat.",
   }),
@@ -50,8 +57,8 @@ export function ApplicationForm({ selectedLetterType }: { selectedLetterType?: s
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      fullName: "",
-      nik: "",
+      fullName: loggedInUser.fullName,
+      nik: loggedInUser.nik,
       letterType: selectedLetterType,
       purpose: "",
     },
@@ -66,7 +73,13 @@ export function ApplicationForm({ selectedLetterType }: { selectedLetterType?: s
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
-    console.log(values);
+    // We add the logged in user data to the submission values
+    const submissionValues = {
+        ...values,
+        fullName: loggedInUser.fullName,
+        nik: loggedInUser.nik,
+    }
+    console.log(submissionValues);
 
     // Simulate API call
     setTimeout(() => {
@@ -74,11 +87,12 @@ export function ApplicationForm({ selectedLetterType }: { selectedLetterType?: s
       setApplicationId(newId);
       setShowSuccessDialog(true);
       setIsSubmitting(false);
-      form.reset();
-      // Since we reset the form, we need to set the letter type again if it was pre-selected
-      if (selectedLetterType) {
-        form.setValue("letterType", selectedLetterType);
-      }
+      form.reset({
+        fullName: loggedInUser.fullName,
+        nik: loggedInUser.nik,
+        purpose: "",
+        letterType: selectedLetterType,
+      });
     }, 1500);
   }
 
@@ -137,7 +151,7 @@ export function ApplicationForm({ selectedLetterType }: { selectedLetterType?: s
               <FormItem>
                 <FormLabel>Nama Lengkap</FormLabel>
                 <FormControl>
-                  <Input placeholder="Contoh: Budi Santoso" {...field} />
+                  <Input {...field} readOnly disabled className="bg-muted/60" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -150,7 +164,7 @@ export function ApplicationForm({ selectedLetterType }: { selectedLetterType?: s
               <FormItem>
                 <FormLabel>Nomor Induk Kependudukan (NIK)</FormLabel>
                 <FormControl>
-                  <Input placeholder="Masukkan 16 digit NIK Anda" {...field} />
+                  <Input {...field} readOnly disabled className="bg-muted/60" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
