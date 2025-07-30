@@ -36,8 +36,9 @@ export function ApplicationTracker() {
     // Simulate API call
     setTimeout(() => {
       if (appId.startsWith("DS-CNCT-")) {
-        const statuses: Status[] = ['Diterima', 'Diproses', 'Selesai', 'Dapat Diambil'];
-        const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+        const statuses: Status[] = ['Diterima', 'Diproses', 'Verifikasi Kasi', 'Persetujuan Sekdes', 'TTE Kades', 'Dapat Diambil'];
+        const randomStatusIndex = Math.floor(Math.random() * statuses.length);
+        const randomStatus = statuses[randomStatusIndex];
         setStatus({
           id: appId,
           name: "Budi Santoso",
