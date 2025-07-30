@@ -36,7 +36,9 @@ function PermohonanBaruContent() {
   return (
     <div className="space-y-8 max-w-2xl mx-auto">
       <header className="space-y-2 text-center">
-        <h1 className="text-3xl font-bold tracking-tight">Permohonan Surat Online</h1>
+        <h1 className="text-3xl font-bold tracking-tight">
+          {selectedLetterType ? `Permohonan ${selectedLetterType}`: "Permohonan Surat Online"}
+        </h1>
         <p className="text-muted-foreground">
           Isi formulir di bawah ini untuk mengajukan permohonan surat keterangan. Pastikan semua data diisi dengan benar.
         </p>

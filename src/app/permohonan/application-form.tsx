@@ -86,6 +86,50 @@ export function ApplicationForm({ selectedLetterType }: { selectedLetterType?: s
     <>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+           {!selectedLetterType && (
+            <FormField
+              control={form.control}
+              name="letterType"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Jenis Surat</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Pilih jenis surat yang diajukan" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                        <SelectItem value="Surat Pengantar Keterangan Catatan Kepolisian">Surat Pengantar Keterangan Catatan Kepolisian</SelectItem>
+                        <SelectItem value="Surat Keterangan Usaha (SKU)">Surat Keterangan Usaha (SKU)</SelectItem>
+                        <SelectItem value="Surat Keterangan Domisili Perusahaan/Yayasan">Surat Keterangan Domisili Perusahaan/Yayasan</SelectItem>
+                        <SelectItem value="Surat Keterangan Laporan Kehilangan">Surat Keterangan Laporan Kehilangan</SelectItem>
+                        <SelectItem value="Surat Keterangan Kepemilikan Rumah">Surat Keterangan Kepemilikan Rumah</SelectItem>
+                        <SelectItem value="Surat Keterangan Laporan Kematian (Ahli Waris)">Surat Keterangan Laporan Kematian (Ahli Waris)</SelectItem>
+                        <SelectItem value="Surat Keterangan Kematian (Akta Kematian)">Surat Keterangan Kematian (Akta Kematian)</SelectItem>
+                        <SelectItem value="Surat Keterangan Status Perkawinan">Surat Keterangan Status Perkawinan</SelectItem>
+                        <SelectItem value="Surat Keterangan Beda Data Kependudukan">Surat Keterangan Beda Data Kependudukan</SelectItem>
+                        <SelectItem value="Surat Keterangan Domisili Calon Jemaah Haji">Surat Keterangan Domisili Calon Jemaah Haji</SelectItem>
+                        <SelectItem value="Surat Keterangan Pindah Domisili">Surat Keterangan Pindah Domisili</SelectItem>
+                        <SelectItem value="Surat Keterangan Kepemilikan Tanah">Surat Keterangan Kepemilikan Tanah</SelectItem>
+                        <SelectItem value="Surat Keterangan Jalan">Surat Keterangan Jalan</SelectItem>
+                        <SelectItem value="Surat Keterangan JPK-KS">Surat Keterangan JPK-KS</SelectItem>
+                        <SelectItem value="Surat Keterangan Tidak Mampu (SKTM)">Surat Keterangan Tidak Mampu (SKTM)</SelectItem>
+                        <SelectItem value="Surat Keterangan Untuk Nikah">Surat Keterangan Untuk Nikah</SelectItem>
+                        <SelectItem value="Surat Keterangan Bekerja di Luar Negeri">Surat Keterangan Bekerja di Luar Negeri</SelectItem>
+                        <SelectItem value="Surat Keterangan Orang Tua">Surat Keterangan Orang Tua</SelectItem>
+                        <SelectItem value="Surat Keterangan Ahli Waris">Surat Keterangan Ahli Waris</SelectItem>
+                        <SelectItem value="Lainnya">Lainnya</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
           <FormField
             control={form.control}
             name="fullName"
@@ -108,49 +152,6 @@ export function ApplicationForm({ selectedLetterType }: { selectedLetterType?: s
                 <FormControl>
                   <Input placeholder="Masukkan 16 digit NIK Anda" {...field} />
                 </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="letterType"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Jenis Surat</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  value={field.value}
-                  disabled={!!selectedLetterType}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Pilih jenis surat yang diajukan" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="Surat Pengantar Keterangan Catatan Kepolisian">Surat Pengantar Keterangan Catatan Kepolisian</SelectItem>
-                    <SelectItem value="Surat Keterangan Usaha (SKU)">Surat Keterangan Usaha (SKU)</SelectItem>
-                    <SelectItem value="Surat Keterangan Domisili Perusahaan/Yayasan">Surat Keterangan Domisili Perusahaan/Yayasan</SelectItem>
-                    <SelectItem value="Surat Keterangan Laporan Kehilangan">Surat Keterangan Laporan Kehilangan</SelectItem>
-                    <SelectItem value="Surat Keterangan Kepemilikan Rumah">Surat Keterangan Kepemilikan Rumah</SelectItem>
-                    <SelectItem value="Surat Keterangan Laporan Kematian (Ahli Waris)">Surat Keterangan Laporan Kematian (Ahli Waris)</SelectItem>
-                    <SelectItem value="Surat Keterangan Kematian (Akta Kematian)">Surat Keterangan Kematian (Akta Kematian)</SelectItem>
-                    <SelectItem value="Surat Keterangan Status Perkawinan">Surat Keterangan Status Perkawinan</SelectItem>
-                    <SelectItem value="Surat Keterangan Beda Data Kependudukan">Surat Keterangan Beda Data Kependudukan</SelectItem>
-                    <SelectItem value="Surat Keterangan Domisili Calon Jemaah Haji">Surat Keterangan Domisili Calon Jemaah Haji</SelectItem>
-                    <SelectItem value="Surat Keterangan Pindah Domisili">Surat Keterangan Pindah Domisili</SelectItem>
-                    <SelectItem value="Surat Keterangan Kepemilikan Tanah">Surat Keterangan Kepemilikan Tanah</SelectItem>
-                    <SelectItem value="Surat Keterangan Jalan">Surat Keterangan Jalan</SelectItem>
-                    <SelectItem value="Surat Keterangan JPK-KS">Surat Keterangan JPK-KS</SelectItem>
-                    <SelectItem value="Surat Keterangan Tidak Mampu (SKTM)">Surat Keterangan Tidak Mampu (SKTM)</SelectItem>
-                    <SelectItem value="Surat Keterangan Untuk Nikah">Surat Keterangan Untuk Nikah</SelectItem>
-                    <SelectItem value="Surat Keterangan Bekerja di Luar Negeri">Surat Keterangan Bekerja di Luar Negeri</SelectItem>
-                    <SelectItem value="Surat Keterangan Orang Tua">Surat Keterangan Orang Tua</SelectItem>
-                    <SelectItem value="Surat Keterangan Ahli Waris">Surat Keterangan Ahli Waris</SelectItem>
-                    <SelectItem value="Lainnya">Lainnya</SelectItem>
-                  </SelectContent>
-                </Select>
                 <FormMessage />
               </FormItem>
             )}
