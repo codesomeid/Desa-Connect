@@ -75,6 +75,10 @@ export function ApplicationForm({ selectedLetterType }: { selectedLetterType?: s
       setShowSuccessDialog(true);
       setIsSubmitting(false);
       form.reset();
+      // Since we reset the form, we need to set the letter type again if it was pre-selected
+      if (selectedLetterType) {
+        form.setValue("letterType", selectedLetterType);
+      }
     }, 1500);
   }
 
@@ -116,7 +120,6 @@ export function ApplicationForm({ selectedLetterType }: { selectedLetterType?: s
                 <FormLabel>Jenis Surat</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
                   value={field.value}
                   disabled={!!selectedLetterType}
                 >
@@ -126,9 +129,25 @@ export function ApplicationForm({ selectedLetterType }: { selectedLetterType?: s
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="Surat Keterangan Usaha">Surat Keterangan Usaha</SelectItem>
-                    <SelectItem value="Surat Keterangan Domisili">Surat Keterangan Domisili</SelectItem>
-                    <SelectItem value="Surat Keterangan Tidak Mampu">Surat Keterangan Tidak Mampu</SelectItem>
+                    <SelectItem value="Surat Pengantar Keterangan Catatan Kepolisian">Surat Pengantar Keterangan Catatan Kepolisian</SelectItem>
+                    <SelectItem value="Surat Keterangan Usaha (SKU)">Surat Keterangan Usaha (SKU)</SelectItem>
+                    <SelectItem value="Surat Keterangan Domisili Perusahaan/Yayasan">Surat Keterangan Domisili Perusahaan/Yayasan</SelectItem>
+                    <SelectItem value="Surat Keterangan Laporan Kehilangan">Surat Keterangan Laporan Kehilangan</SelectItem>
+                    <SelectItem value="Surat Keterangan Kepemilikan Rumah">Surat Keterangan Kepemilikan Rumah</SelectItem>
+                    <SelectItem value="Surat Keterangan Laporan Kematian (Ahli Waris)">Surat Keterangan Laporan Kematian (Ahli Waris)</SelectItem>
+                    <SelectItem value="Surat Keterangan Kematian (Akta Kematian)">Surat Keterangan Kematian (Akta Kematian)</SelectItem>
+                    <SelectItem value="Surat Keterangan Status Perkawinan">Surat Keterangan Status Perkawinan</SelectItem>
+                    <SelectItem value="Surat Keterangan Beda Data Kependudukan">Surat Keterangan Beda Data Kependudukan</SelectItem>
+                    <SelectItem value="Surat Keterangan Domisili Calon Jemaah Haji">Surat Keterangan Domisili Calon Jemaah Haji</SelectItem>
+                    <SelectItem value="Surat Keterangan Pindah Domisili">Surat Keterangan Pindah Domisili</SelectItem>
+                    <SelectItem value="Surat Keterangan Kepemilikan Tanah">Surat Keterangan Kepemilikan Tanah</SelectItem>
+                    <SelectItem value="Surat Keterangan Jalan">Surat Keterangan Jalan</SelectItem>
+                    <SelectItem value="Surat Keterangan JPK-KS">Surat Keterangan JPK-KS</SelectItem>
+                    <SelectItem value="Surat Keterangan Tidak Mampu (SKTM)">Surat Keterangan Tidak Mampu (SKTM)</SelectItem>
+                    <SelectItem value="Surat Keterangan Untuk Nikah">Surat Keterangan Untuk Nikah</SelectItem>
+                    <SelectItem value="Surat Keterangan Bekerja di Luar Negeri">Surat Keterangan Bekerja di Luar Negeri</SelectItem>
+                    <SelectItem value="Surat Keterangan Orang Tua">Surat Keterangan Orang Tua</SelectItem>
+                    <SelectItem value="Surat Keterangan Ahli Waris">Surat Keterangan Ahli Waris</SelectItem>
                     <SelectItem value="Lainnya">Lainnya</SelectItem>
                   </SelectContent>
                 </Select>

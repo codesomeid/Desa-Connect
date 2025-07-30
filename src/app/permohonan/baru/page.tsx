@@ -9,9 +9,25 @@ function PermohonanBaruContent() {
     const letterTypeParam = searchParams.get('jenis');
 
     const letterTypeMap: {[key: string]: string} = {
-        'usaha': 'Surat Keterangan Usaha',
-        'domisili': 'Surat Keterangan Domisili',
-        'tidak-mampu': 'Surat Keterangan Tidak Mampu',
+        'skck': 'Surat Pengantar Keterangan Catatan Kepolisian',
+        'usaha': 'Surat Keterangan Usaha (SKU)',
+        'domisili-perusahaan': 'Surat Keterangan Domisili Perusahaan/Yayasan',
+        'kehilangan': 'Surat Keterangan Laporan Kehilangan',
+        'kepemilikan-rumah': 'Surat Keterangan Kepemilikan Rumah',
+        'kematian-waris': 'Surat Keterangan Laporan Kematian (Ahli Waris)',
+        'kematian-akta': 'Surat Keterangan Kematian (Akta Kematian)',
+        'status-perkawinan': 'Surat Keterangan Status Perkawinan',
+        'beda-data': 'Surat Keterangan Beda Data Kependudukan',
+        'domisili-haji': 'Surat Keterangan Domisili Calon Jemaah Haji',
+        'pindah-domisili': 'Surat Keterangan Pindah Domisili',
+        'kepemilikan-tanah': 'Surat Keterangan Kepemilikan Tanah',
+        'jalan': 'Surat Keterangan Jalan',
+        'jpk-ks': 'Surat Keterangan JPK-KS',
+        'tidak-mampu': 'Surat Keterangan Tidak Mampu (SKTM)',
+        'untuk-nikah': 'Surat Keterangan Untuk Nikah',
+        'kerja-luar-negeri': 'Surat Keterangan Bekerja di Luar Negeri',
+        'orang-tua': 'Surat Keterangan Orang Tua',
+        'ahli-waris': 'Surat Keterangan Ahli Waris',
         'lainnya': 'Lainnya'
     }
 
