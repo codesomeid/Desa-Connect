@@ -2,10 +2,11 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { Megaphone, Users, FileText, ListChecks, UserCircle } from "lucide-react";
+import { Megaphone, Users, FileText, ListChecks, UserCircle, LayoutDashboard, UserPlus } from "lucide-react";
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
+import { useEffect, useState } from "react";
 
-const navItems = [
+const citizenNavItems = [
   { href: "/", label: "Pengumuman", icon: Megaphone },
   { href: "/permohonan", label: "Permohonan Surat", icon: FileText },
   { href: "/lacak", label: "Lacak Permohonan", icon: ListChecks },
@@ -13,8 +14,25 @@ const navItems = [
   { href: "/profil", label: "Profil Saya", icon: UserCircle },
 ];
 
+const adminNavItems = [
+    { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/admin/users", label: "Manajemen Pengguna", icon: UserPlus },
+    // Aparatur bisa juga melihat halaman warga
+    ...citizenNavItems,
+];
+
+
 export function SidebarNav() {
   const pathname = usePathname();
+  const [isClient, setIsClient] = useState(false)
+  const isAdminRoute = pathname.startsWith('/admin');
+  
+  // To avoid hydration mismatch, we only render the admin nav on the client
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+  const navItems = isClient && isAdminRoute ? adminNavItems : citizenNavItems;
 
   return (
     <SidebarMenu>

@@ -56,8 +56,8 @@ export function AparaturLoginForm() {
           description: "Selamat datang kembali, Admin!",
         });
         // In a real app, you'd get a token and save it.
-        // For now, we just redirect to an admin dashboard (which we'll create later)
-        router.push("/"); // TODO: Change to admin dashboard
+        // For now, we just redirect to an admin dashboard
+        router.push("/admin/dashboard");
       } else {
         toast({
           variant: "destructive",
