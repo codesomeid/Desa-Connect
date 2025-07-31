@@ -18,22 +18,24 @@ const adminNavItems = [
     { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { href: "/admin/permohonan", label: "Manajemen Permohonan", icon: FileCheck },
     { href: "/admin/users", label: "Manajemen Pengguna", icon: UserPlus },
-    // Aparatur bisa juga melihat halaman warga
-    ...citizenNavItems,
 ];
 
 
 export function SidebarNav() {
   const pathname = usePathname();
   const [isClient, setIsClient] = useState(false)
-  const isAdminRoute = pathname.startsWith('/admin');
   
-  // To avoid hydration mismatch, we only render the admin nav on the client
+  // This is a simple role detection based on the URL.
+  // In a real app, this would come from a proper auth context.
+  const isAdmin = pathname.startsWith('/admin');
+  
+  // To avoid hydration mismatch, we only render based on path on the client
   useEffect(() => {
     setIsClient(true)
   }, [])
 
-  const navItems = isClient && isAdminRoute ? adminNavItems : citizenNavItems;
+  // Admin sees their own nav items plus all citizen nav items
+  const navItems = isClient && isAdmin ? [...adminNavItems, ...citizenNavItems] : citizenNavItems;
 
   return (
     <SidebarMenu>
