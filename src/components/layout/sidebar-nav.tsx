@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { Megaphone, Users, FileText, ListChecks, UserCircle, LayoutDashboard, UserPlus, FileCheck } from "lucide-react";
+import { Megaphone, Users, FileText, ListChecks, UserCircle, LayoutDashboard, UserPlus, FileCheck, FilePlus2 } from "lucide-react";
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
 import { useEffect, useState } from "react";
 
@@ -17,6 +17,7 @@ const citizenNavItems = [
 const adminNavItems = [
     { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { href: "/admin/permohonan", label: "Manajemen Permohonan", icon: FileCheck },
+    { href: "/admin/jenis-surat", label: "Manajemen Surat", icon: FilePlus2 },
     { href: "/admin/users", label: "Manajemen Pengguna", icon: UserPlus },
 ];
 
