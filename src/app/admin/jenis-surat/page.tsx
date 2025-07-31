@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Building2, FileText, Shield, MoreHorizontal } from "lucide-react";
+import { Building2, FileText, Shield, MoreHorizontal, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -88,6 +88,10 @@ export default function LetterTypeManagementPage() {
                                         </Button>
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent align="end">
+                                        <DropdownMenuItem>
+                                          <Eye className="mr-2 h-4 w-4" />
+                                          Lihat Template
+                                        </DropdownMenuItem>
                                         <DropdownMenuItem>Ubah</DropdownMenuItem>
                                         <DropdownMenuItem className="text-destructive hover:!text-destructive-foreground hover:!bg-destructive">
                                             Hapus
