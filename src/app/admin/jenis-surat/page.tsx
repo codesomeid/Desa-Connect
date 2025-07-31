@@ -63,7 +63,7 @@ export default function LetterTypeManagementPage() {
                  <CardHeader>
                     <CardTitle>Daftar Jenis Surat</CardTitle>
                     <CardDescription>Daftar semua jenis surat yang saat ini tersedia dalam sistem.</CardDescription>
-                </Header>
+                </CardHeader>
                 <CardContent>
                      <Table>
                         <TableHeader>
