@@ -25,17 +25,15 @@ export function SidebarNav() {
   const pathname = usePathname();
   const [isClient, setIsClient] = useState(false)
   
-  // This is a simple role detection based on the URL.
-  // In a real app, this would come from a proper auth context.
-  const isAdmin = pathname.startsWith('/admin');
-  
   // To avoid hydration mismatch, we only render based on path on the client
   useEffect(() => {
     setIsClient(true)
   }, [])
 
-  // Admin sees their own nav items plus all citizen nav items
-  const navItems = isClient && isAdmin ? [...adminNavItems, ...citizenNavItems] : citizenNavItems;
+  // This logic determines which set of navigation items to show
+  // based on the current path.
+  const isAdminSection = isClient && pathname.startsWith('/admin');
+  const navItems = isAdminSection ? adminNavItems : citizenNavItems;
 
   return (
     <SidebarMenu>
