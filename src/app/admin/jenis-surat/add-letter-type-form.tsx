@@ -1,3 +1,4 @@
+
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -79,7 +80,7 @@ export function AddLetterTypeForm() {
   const generatePreview = () => {
     let content = form.getValues("template");
     for (const [key, value] of Object.entries(dummyDataForPreview)) {
-      content = content.replace(new RegExp(`{{${key}}}`, "g"), value);
+      content = content.replace(new RegExp(`{{${key}}}`, "g"), value as string);
     }
     setPreviewContent(content);
   };
@@ -174,7 +175,7 @@ export function AddLetterTypeForm() {
                   />
                 </FormControl>
                  <p className="text-xs text-muted-foreground pt-1">
-                  Gunakan placeholder seperti `{{nama_lengkap}}`, `{{nik}}`, `{{keperluan}}`.
+                  Gunakan placeholder seperti `&#123;&#123;nama_lengkap&#125;&#125;`, `&#123;&#123;nik&#125;&#125;`, `&#123;&#123;keperluan&#125;&#125;`.
                 </p>
                 <FormMessage />
               </FormItem>
