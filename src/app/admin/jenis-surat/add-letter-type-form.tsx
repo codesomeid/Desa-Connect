@@ -23,18 +23,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useState } from "react";
-import { Eye, FilePlus2, Loader2, Shield } from "lucide-react";
+import { FilePlus2, Loader2, Upload } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter,
-  DialogClose,
-} from "@/components/ui/dialog";
 
 const formSchema = z.object({
   letterName: z.string().min(5, { message: "Nama surat minimal 5 karakter." }),
@@ -42,188 +32,149 @@ const formSchema = z.object({
     .string()
     .min(10, { message: "Deskripsi minimal 10 karakter." }),
   icon: z.string().optional(),
-  template: z
-    .string()
-    .min(20, { message: "Template surat minimal 20 karakter." }),
+  templateFile: z
+    .instanceof(typeof window !== 'undefined' ? File : Object, { message: "File template harus diunggah." })
+    .refine((file) => file.size > 0, "File template tidak boleh kosong.")
+    .refine(
+      (file) => file.type === "application/pdf",
+      "Hanya file PDF yang diizinkan."
+    ),
 });
-
-const dummyDataForPreview = {
-  nama_lengkap: "Budi Santoso",
-  nik: "3501234567890001",
-  keperluan: "Membuka rekening bank",
-  tanggal_surat: new Date().toLocaleDateString("id-ID", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }),
-  nama_usaha: "Toko Kelontong Berkah",
-  alamat_usaha: "Jl. Merdeka No. 10",
-  // Add other dummy data as needed
-};
 
 export function AddLetterTypeForm() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const [previewContent, setPreviewContent] = useState("");
-
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       letterName: "",
       description: "",
       icon: "FileText",
-      template:
-        "Yang bertanda tangan di bawah ini, Kepala DesaConnect, menerangkan bahwa:\n\nNama: {{nama_lengkap}}\nNIK: {{nik}}\n\nAdalah benar warga kami yang berdomisili di DesaConnect. Surat keterangan ini dibuat untuk keperluan {{keperluan}}.\n\nDemikian surat ini dibuat untuk dipergunakan sebagaimana mestinya.\n\nDesaConnect, {{tanggal_surat}}",
     },
   });
 
-  const generatePreview = () => {
-    let content = form.getValues("template");
-    for (const [key, value] of Object.entries(dummyDataForPreview)) {
-      content = content.replace(new RegExp(`{{${key}}}`, "g"), value as string);
-    }
-    setPreviewContent(content);
-  };
-
   function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
+    // In a real app, you would upload the file to storage.
     setTimeout(() => {
-      console.log(values);
+      console.log({
+        ...values,
+        templateFileName: values.templateFile.name,
+        templateFileType: values.templateFile.type,
+        templateFileSize: values.templateFile.size,
+      });
       toast({
         title: "Jenis Surat Dibuat",
-        description: `Jenis surat "${values.letterName}" telah berhasil ditambahkan.`,
+        description: `Jenis surat "${values.letterName}" dengan template PDF telah berhasil ditambahkan.`,
       });
       form.reset();
+      // Manually clear file input if needed, though reset should handle it.
       setIsLoading(false);
     }, 1500);
   }
 
   return (
-    <Dialog>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <FormField
-            control={form.control}
-            name="letterName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Nama Jenis Surat</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Contoh: Surat Keterangan Usaha"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Deskripsi Singkat</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Jelaskan kegunaan surat ini"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="icon"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Ikon Surat</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Pilih ikon untuk surat" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="FileText">File Umum</SelectItem>
-                    <SelectItem value="Shield">Keamanan (SKCK)</SelectItem>
-                    <SelectItem value="Building2">Usaha/Bangunan</SelectItem>
-                    <SelectItem value="Home">Rumah/Domisili</SelectItem>
-                    <SelectItem value="Users">Keluarga/Ahli Waris</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="template"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Template Surat</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Masukkan template surat di sini. Gunakan {{placeholder}} untuk data dinamis."
-                    rows={10}
-                    {...field}
-                  />
-                </FormControl>
-                 <p className="text-xs text-muted-foreground pt-1">
-                  Gunakan placeholder seperti `&#123;&#123;nama_lengkap&#125;&#125;`, `&#123;&#123;nik&#125;&#125;`, `&#123;&#123;keperluan&#125;&#125;`.
-                </p>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <div className="flex flex-col sm:flex-row gap-2">
-            <DialogTrigger asChild>
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full"
-                onClick={generatePreview}
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <FormField
+          control={form.control}
+          name="letterName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Nama Jenis Surat</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="Contoh: Surat Keterangan Usaha"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Deskripsi Singkat</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Jelaskan kegunaan surat ini"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="icon"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Ikon Surat</FormLabel>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value}
               >
-                <Eye className="mr-2 h-4 w-4" />
-                Lihat Pratinjau
-              </Button>
-            </DialogTrigger>
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                <FilePlus2 className="mr-2 h-4 w-4" />
-              )}
-              Tambah Jenis Surat
-            </Button>
-          </div>
-        </form>
-      </Form>
-      <DialogContent className="sm:max-w-3xl">
-        <DialogHeader>
-          <DialogTitle>Pratinjau Surat</DialogTitle>
-          <DialogDescription>
-            Ini adalah tampilan surat yang akan dihasilkan berdasarkan template
-            Anda dan data contoh.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="my-4 max-h-[60vh] overflow-y-auto rounded-md border bg-secondary/30 p-6">
-          <pre className="whitespace-pre-wrap font-sans text-sm text-foreground">
-            {previewContent}
-          </pre>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Pilih ikon untuk surat" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="FileText">File Umum</SelectItem>
+                  <SelectItem value="Shield">Keamanan (SKCK)</SelectItem>
+                  <SelectItem value="Building2">Usaha/Bangunan</SelectItem>
+                  <SelectItem value="Home">Rumah/Domisili</SelectItem>
+                  <SelectItem value="Users">Keluarga/Ahli Waris</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="templateFile"
+          render={({ field: { onChange, value, ...rest } }) => (
+            <FormItem>
+              <FormLabel>Template Surat (PDF)</FormLabel>
+              <FormControl>
+                <Input
+                  type="file"
+                  accept="application/pdf"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      onChange(file);
+                    }
+                  }}
+                  {...rest}
+                  className="file:text-foreground"
+                />
+              </FormControl>
+              <p className="text-xs text-muted-foreground pt-1">
+                Unggah file PDF yang akan digunakan sebagai template.
+              </p>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <div className="flex flex-col sm:flex-row gap-2">
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <FilePlus2 className="mr-2 h-4 w-4" />
+            )}
+            Tambah Jenis Surat
+          </Button>
         </div>
-        <DialogFooter>
-          <DialogClose asChild>
-            <Button type="button">Tutup</Button>
-          </DialogClose>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+      </form>
+    </Form>
   );
 }
