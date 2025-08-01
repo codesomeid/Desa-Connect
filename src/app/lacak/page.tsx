@@ -1,6 +1,7 @@
 import { ApplicationTracker } from "./application-tracker";
+import { Suspense } from "react";
 
-export default function LacakPage() {
+function LacakContent() {
   return (
      <div className="space-y-8 max-w-2xl mx-auto">
       <header className="space-y-2 text-center">
@@ -12,4 +13,13 @@ export default function LacakPage() {
       <ApplicationTracker />
     </div>
   );
+}
+
+
+export default function LacakPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <LacakContent />
+        </Suspense>
+    )
 }

@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Loader2, Search, TriangleAlert } from "lucide-react";
 import { StatusTimeline, type Status } from "./status-timeline";
+import { useSearchParams } from "next/navigation";
 
 type ApplicationStatus = {
   id: string;
@@ -17,14 +18,28 @@ type ApplicationStatus = {
 };
 
 export function ApplicationTracker() {
-  const [appId, setAppId] = useState("");
+  const searchParams = useSearchParams();
+  const idFromQuery = searchParams.get("id");
+
+  const [appId, setAppId] = useState(idFromQuery || "");
   const [status, setStatus] = useState<ApplicationStatus | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  useEffect(() => {
+    if (idFromQuery) {
+        setAppId(idFromQuery);
+        // Automatically trigger search if ID comes from query param
+        handleSearch(null, idFromQuery);
+    }
+  }, [idFromQuery]);
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!appId) {
+
+  const handleSearch = (e: React.FormEvent | null, searchId?: string) => {
+    e?.preventDefault();
+    const finalAppId = searchId || appId;
+
+    if (!finalAppId) {
       setError("Nomor pelacakan tidak boleh kosong.");
       return;
     }
@@ -35,19 +50,19 @@ export function ApplicationTracker() {
 
     // Simulate API call
     setTimeout(() => {
-      if (appId.startsWith("DS-CNCT-")) {
+      if (finalAppId.startsWith("DS-CNCT-")) {
         const statuses: Status[] = ['Diterima', 'Diproses', 'Verifikasi Kasi', 'Persetujuan Sekdes', 'TTE Kades', 'Dapat Diambil'];
         const randomStatusIndex = Math.floor(Math.random() * statuses.length);
         const randomStatus = statuses[randomStatusIndex];
         setStatus({
-          id: appId,
+          id: finalAppId,
           name: "Budi Santoso",
           letterType: "Surat Keterangan Usaha",
           status: randomStatus,
           date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
         });
       } else {
-        setError(`Permohonan dengan nomor "${appId}" tidak ditemukan. Pastikan nomor yang Anda masukkan benar.`);
+        setError(`Permohonan dengan nomor "${finalAppId}" tidak ditemukan. Pastikan nomor yang Anda masukkan benar.`);
       }
       setIsLoading(false);
     }, 1500);
@@ -66,7 +81,7 @@ export function ApplicationTracker() {
               className="flex-grow"
             />
             <Button type="submit" className="bg-accent hover:bg-accent/90" disabled={isLoading}>
-              {isLoading ? (
+              {isLoading && !status ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (
                 <Search className="mr-2 h-4 w-4" />
@@ -77,7 +92,7 @@ export function ApplicationTracker() {
         </CardContent>
       </Card>
 
-      {isLoading && (
+      {(isLoading && !status) && (
         <div className="flex justify-center items-center p-8">
             <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
         </div>
