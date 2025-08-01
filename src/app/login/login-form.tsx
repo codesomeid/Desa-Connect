@@ -50,13 +50,16 @@ export function LoginForm() {
     // Simulate login
     setTimeout(() => {
       // In a real app, you would call your auth provider here.
-      if (values.email === "warga@desa.com" && values.password === "warga123") {
+      if (
+        (values.email === "warga@desa.com" && values.password === "warga123") ||
+        (values.email === "admin@desa.com" && values.password === "admin123")
+      ) {
         toast({
           title: "Login Berhasil",
           description: "Selamat datang kembali!",
         });
         // In a real app, you'd get a token and save it.
-        // For now, we just redirect.
+        // Redirect to the main dashboard after login.
         router.push("/");
       } else {
         toast({
@@ -72,7 +75,7 @@ export function LoginForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Masuk</CardTitle>
+        <CardTitle>Masuk Akun</CardTitle>
         <CardDescription>
           Gunakan email dan password Anda untuk melanjutkan.
         </CardDescription>
@@ -87,7 +90,7 @@ export function LoginForm() {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="warga@desa.com" {...field} />
+                    <Input placeholder="email@desa.com" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -100,7 +103,7 @@ export function LoginForm() {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="warga123" {...field} />
+                    <Input type="password" placeholder="******" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

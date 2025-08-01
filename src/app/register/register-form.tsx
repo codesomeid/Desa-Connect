@@ -59,7 +59,7 @@ export function RegisterForm() {
         title: "Pendaftaran Berhasil",
         description: "Akun Anda telah berhasil dibuat. Silakan masuk.",
       });
-      router.push("/login/warga");
+      router.push("/login");
       setIsLoading(false);
     }, 1500);
   }
@@ -67,7 +67,7 @@ export function RegisterForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Daftar Akun Warga</CardTitle>
+        <CardTitle>Daftar Akun</CardTitle>
         <CardDescription>
           Isi data di bawah ini untuk membuat akun.
         </CardDescription>
@@ -145,7 +145,7 @@ export function RegisterForm() {
       <CardFooter className="flex justify-center text-sm">
         <p>
           Sudah punya akun?{" "}
-          <Link href="/login/warga" className="font-semibold text-accent hover:underline">
+          <Link href="/login" className="font-semibold text-accent hover:underline">
             Masuk di sini
           </Link>
         </p>

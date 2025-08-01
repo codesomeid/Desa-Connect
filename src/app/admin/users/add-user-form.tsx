@@ -13,13 +13,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useState } from "react";
 import { Loader2, UserPlus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -28,7 +21,6 @@ const formSchema = z.object({
   nik: z.string().length(16, { message: "NIK harus 16 digit." }),
   fullName: z.string().min(3, { message: "Nama lengkap minimal 3 karakter." }),
   email: z.string().email({ message: "Format email tidak valid." }),
-  role: z.string({ required_error: "Peran harus dipilih." }),
 });
 
 export function AddUserForm() {
@@ -41,7 +33,6 @@ export function AddUserForm() {
       nik: "",
       fullName: "",
       email: "",
-      role: "Warga",
     },
   });
 
@@ -52,10 +43,9 @@ export function AddUserForm() {
       console.log(values);
       toast({
         title: "Pengguna Berhasil Dibuat",
-        description: `Akun untuk ${values.fullName} dengan peran ${values.role} telah ditambahkan.`,
+        description: `Akun untuk ${values.fullName} telah ditambahkan.`,
       });
       form.reset();
-      form.setValue("role", "Warga");
       setIsLoading(false);
     }, 1500);
   }
@@ -98,27 +88,6 @@ export function AddUserForm() {
               <FormControl>
                 <Input placeholder="email@contoh.com" {...field} />
               </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="role"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Peran Pengguna</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Pilih peran" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="Warga">Warga</SelectItem>
-                  <SelectItem value="Aparatur Desa">Aparatur Desa</SelectItem>
-                </SelectContent>
-              </Select>
               <FormMessage />
             </FormItem>
           )}

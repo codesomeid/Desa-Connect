@@ -44,7 +44,7 @@ export default function UserManagementPage() {
             <Card>
                 <CardHeader>
                     <CardTitle>Tambah Pengguna Baru</CardTitle>
-                    <CardDescription>Buat akun untuk warga atau aparatur desa baru.</CardDescription>
+                    <CardDescription>Buat akun untuk pengguna baru.</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <AddUserForm />
@@ -63,7 +63,6 @@ export default function UserManagementPage() {
                             <TableRow>
                             <TableHead>Nama</TableHead>
                             <TableHead>Email</TableHead>
-                            <TableHead>Peran</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -71,11 +70,6 @@ export default function UserManagementPage() {
                             <TableRow key={user.email}>
                                 <TableCell className="font-medium">{user.name}</TableCell>
                                 <TableCell>{user.email}</TableCell>
-                                <TableCell>
-                                    <Badge variant={user.role === "Aparatur Desa" ? "default" : "secondary"}>
-                                        {user.role}
-                                    </Badge>
-                                </TableCell>
                             </TableRow>
                             ))}
                         </TableBody>
