@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button";
 import { type Status } from "@/app/lacak/status-timeline";
+import Link from "next/link";
 
 type Application = {
   id: string;
@@ -109,7 +110,9 @@ export function ApplicationList() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuLabel>Aksi</DropdownMenuLabel>
-                  <DropdownMenuItem>Lihat Detail</DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href={`/admin/permohonan/${app.id}`}>Lihat Detail</Link>
+                  </DropdownMenuItem>
                   <DropdownMenuItem>Ubah Status</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
