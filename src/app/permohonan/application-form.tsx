@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 // Dummy user data, assuming user is logged in.
 // In a real app, this would come from an auth context or session.
@@ -67,6 +68,7 @@ export function ApplicationForm({ selectedLetterType }: { selectedLetterType?: s
   });
 
   const formData = form.watch();
+  const purposeValue = form.watch("purpose");
 
   useEffect(() => {
     if (selectedLetterType) {
@@ -192,7 +194,15 @@ export function ApplicationForm({ selectedLetterType }: { selectedLetterType?: s
                     {...field}
                   />
                 </FormControl>
-                <FormMessage />
+                <div className="flex justify-between items-center text-xs">
+                  <FormMessage />
+                  <p className={cn(
+                    "text-muted-foreground",
+                    (purposeValue?.length || 0) < 10 && "text-destructive"
+                  )}>
+                    {purposeValue?.length || 0} / 10 karakter
+                  </p>
+                </div>
               </FormItem>
             )}
           />
