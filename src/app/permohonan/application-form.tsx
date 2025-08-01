@@ -24,6 +24,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   AlertDialog,
   AlertDialogAction,
+  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
@@ -52,6 +53,7 @@ const formSchema = z.object({
 export function ApplicationForm({ selectedLetterType }: { selectedLetterType?: string }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [showReviewDialog, setShowReviewDialog] = useState(false);
   const [applicationId, setApplicationId] = useState("");
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -64,18 +66,25 @@ export function ApplicationForm({ selectedLetterType }: { selectedLetterType?: s
     },
   });
 
+  const formData = form.watch();
+
   useEffect(() => {
     if (selectedLetterType) {
         form.setValue("letterType", selectedLetterType);
     }
   }, [selectedLetterType, form]);
 
+  function onReview(values: z.infer<typeof formSchema>) {
+    setShowReviewDialog(true);
+  }
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onFinalSubmit() {
     setIsSubmitting(true);
+    setShowReviewDialog(false);
+
     // We add the logged in user data to the submission values
     const submissionValues = {
-        ...values,
+        ...form.getValues(),
         fullName: loggedInUser.fullName,
         nik: loggedInUser.nik,
     }
@@ -99,7 +108,7 @@ export function ApplicationForm({ selectedLetterType }: { selectedLetterType?: s
   return (
     <>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onReview)} className="space-y-6">
            {!selectedLetterType && (
             <FormField
               control={form.control}
@@ -148,10 +157,10 @@ export function ApplicationForm({ selectedLetterType }: { selectedLetterType?: s
             control={form.control}
             name="fullName"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="hidden">
                 <FormLabel>Nama Lengkap</FormLabel>
                 <FormControl>
-                  <Input {...field} readOnly disabled className="bg-muted/60" />
+                  <Input {...field} readOnly />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -161,10 +170,10 @@ export function ApplicationForm({ selectedLetterType }: { selectedLetterType?: s
             control={form.control}
             name="nik"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="hidden">
                 <FormLabel>Nomor Induk Kependudukan (NIK)</FormLabel>
                 <FormControl>
-                  <Input {...field} readOnly disabled className="bg-muted/60" />
+                  <Input {...field} readOnly />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -187,18 +196,56 @@ export function ApplicationForm({ selectedLetterType }: { selectedLetterType?: s
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full bg-accent hover:bg-accent/90" disabled={isSubmitting}>
-            {isSubmitting ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Mengajukan...
-              </>
-            ) : (
-              "Ajukan Permohonan"
-            )}
+          <Button type="submit" className="w-full bg-accent hover:bg-accent/90">
+            Tinjau & Ajukan
           </Button>
         </form>
       </Form>
+      
+      {/* Review Dialog */}
+      <AlertDialog open={showReviewDialog} onOpenChange={setShowReviewDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Tinjau Permohonan Anda</AlertDialogTitle>
+            <AlertDialogDescription>
+              Pastikan data yang Anda masukkan sudah benar sebelum mengajukan permohonan.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="space-y-4 text-sm">
+            <div>
+              <p className="font-semibold text-muted-foreground">Jenis Surat</p>
+              <p>{formData.letterType}</p>
+            </div>
+            <div>
+              <p className="font-semibold text-muted-foreground">Nama Pemohon</p>
+              <p>{formData.fullName}</p>
+            </div>
+             <div>
+              <p className="font-semibold text-muted-foreground">NIK</p>
+              <p>{formData.nik}</p>
+            </div>
+            <div>
+              <p className="font-semibold text-muted-foreground">Keperluan</p>
+              <p>{formData.purpose}</p>
+            </div>
+          </div>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isSubmitting}>Batal</AlertDialogCancel>
+            <AlertDialogAction onClick={onFinalSubmit} disabled={isSubmitting}>
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Mengajukan...
+                </>
+              ) : (
+                "Ya, Ajukan Sekarang"
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Success Dialog */}
       <AlertDialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
