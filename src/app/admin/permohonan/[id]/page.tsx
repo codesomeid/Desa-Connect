@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import { StatusUpdater } from "./status-updater";
+import { GenerateDraftButton } from "./generate-draft-button";
 
 // Dummy data for a single application. In a real app, you would fetch this.
 const application = {
@@ -90,8 +91,10 @@ export default function ApplicationDetailPage({ params }: { params: { id: string
                     <CardTitle>Proses & Tindakan</CardTitle>
                     <CardDescription>Ubah status atau lakukan tindakan lain pada permohonan ini.</CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="space-y-4">
                     <StatusUpdater currentStatus={application.status} allStatuses={allStatuses} />
+                    <Separator />
+                    <GenerateDraftButton application={application} />
                 </CardContent>
             </Card>
         </div>
