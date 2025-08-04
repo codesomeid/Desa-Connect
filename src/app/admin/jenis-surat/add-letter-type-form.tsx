@@ -14,7 +14,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -23,7 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useState } from "react";
-import { FilePlus2, Loader2, Upload } from "lucide-react";
+import { FilePlus2, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
@@ -100,7 +99,7 @@ export function AddLetterTypeForm() {
             <FormItem>
               <FormLabel>Deskripsi Singkat</FormLabel>
               <FormControl>
-                <Textarea
+                <Input
                   placeholder="Jelaskan kegunaan surat ini"
                   {...field}
                 />
