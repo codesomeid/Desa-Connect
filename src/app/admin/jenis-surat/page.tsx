@@ -23,18 +23,25 @@ const letterTypes = [
     name: "Surat Pengantar Keterangan Catatan Kepolisian",
     description: "Untuk pembuatan SKCK.",
     icon: <Shield className="h-5 w-5 text-muted-foreground" />,
+    templateUrl: "/skck_template.pdf", // Dummy URL
   },
   {
     name: "Surat Keterangan Usaha (SKU)",
     description: "Untuk keperluan membuka atau menjalankan usaha.",
     icon: <Building2 className="h-5 w-5 text-muted-foreground" />,
+    templateUrl: "/sku_template.pdf", // Dummy URL
   },
   {
     name: "Surat Keterangan Kematian (Akta Kematian)",
     description: "Sebagai pengantar untuk pembuatan akta kematian.",
     icon: <FileText className="h-5 w-5 text-muted-foreground" />,
+    templateUrl: "/kematian_template.pdf", // Dummy URL
   },
 ];
+
+const handleViewTemplate = (url: string) => {
+  window.open(url, "_blank");
+};
 
 
 export default function LetterTypeManagementPage() {
@@ -89,7 +96,7 @@ export default function LetterTypeManagementPage() {
                                         </Button>
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent align="end">
-                                        <DropdownMenuItem>
+                                        <DropdownMenuItem onSelect={() => handleViewTemplate(letter.templateUrl)}>
                                           <Eye className="mr-2 h-4 w-4" />
                                           Lihat Template
                                         </DropdownMenuItem>
