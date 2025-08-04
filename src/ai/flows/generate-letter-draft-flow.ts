@@ -11,7 +11,7 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
-export const GenerateLetterDraftInputSchema = z.object({
+const GenerateLetterDraftInputSchema = z.object({
   applicantName: z.string().describe('The full name of the applicant.'),
   nik: z.string().describe('The National Identity Number (NIK) of the applicant.'),
   letterType: z.string().describe('The type of letter being requested.'),
@@ -19,7 +19,7 @@ export const GenerateLetterDraftInputSchema = z.object({
 });
 export type GenerateLetterDraftInput = z.infer<typeof GenerateLetterDraftInputSchema>;
 
-export const GenerateLetterDraftOutputSchema = z.object({
+const GenerateLetterDraftOutputSchema = z.object({
   draft: z.string().describe('The generated letter draft content.'),
 });
 export type GenerateLetterDraftOutput = z.infer<typeof GenerateLetterDraftOutputSchema>;
