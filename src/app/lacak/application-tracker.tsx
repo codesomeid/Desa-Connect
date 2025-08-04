@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -51,7 +52,7 @@ export function ApplicationTracker() {
     // Simulate API call
     setTimeout(() => {
       if (finalAppId.startsWith("DS-CNCT-")) {
-        const statuses: Status[] = ['Diterima', 'Diproses', 'Verifikasi Kasi', 'Persetujuan Sekdes', 'TTE Kades', 'Dapat Diambil'];
+        const statuses: Status[] = ['Baru Masuk', 'Diproses Staf', 'Verifikasi Kasi', 'Persetujuan Sekdes', 'Menunggu TTE Kades', 'Selesai & Dapat Diambil'];
         const randomStatusIndex = Math.floor(Math.random() * statuses.length);
         const randomStatus = statuses[randomStatusIndex];
         setStatus({

@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { type Status, StatusTimeline } from "@/app/lacak/status-timeline";
 import { ArrowLeft } from "lucide-react";
@@ -14,10 +15,10 @@ const application = {
     letterType: "Surat Keterangan Usaha (SKU)",
     submissionDate: "2024-07-20",
     purpose: "Untuk mengajukan pinjaman KUR di Bank BRI sebagai modal tambahan untuk usaha warung kelontong yang sudah berjalan selama 2 tahun.",
-    status: "Diterima" as Status
+    status: "Baru Masuk" as Status
 };
 
-const allStatuses: Status[] = ['Diterima', 'Diproses', 'Verifikasi Kasi', 'Persetujuan Sekdes', 'TTE Kades', 'Dapat Diambil'];
+const allStatuses: Status[] = ['Baru Masuk', 'Diproses Staf', 'Verifikasi Kasi', 'Persetujuan Sekdes', 'Menunggu TTE Kades', 'Selesai & Dapat Diambil'];
 
 
 export default function ApplicationDetailPage({ params }: { params: { id: string } }) {

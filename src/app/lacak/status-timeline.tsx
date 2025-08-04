@@ -1,17 +1,18 @@
+
 "use client";
 
 import { cn } from "@/lib/utils";
-import { Check, CircleDot, Hourglass, MailCheck, UserCheck, FileSignature } from "lucide-react";
+import { Check, CircleDot, Hourglass, MailCheck, UserCheck, FileSignature, FileUp, ShieldCheck } from "lucide-react";
 
-export type Status = 'Diterima' | 'Diproses' | 'Verifikasi Kasi' | 'Persetujuan Sekdes' | 'TTE Kades' | 'Dapat Diambil';
+export type Status = 'Baru Masuk' | 'Diproses Staf' | 'Verifikasi Kasi' | 'Persetujuan Sekdes' | 'Menunggu TTE Kades' | 'Selesai & Dapat Diambil';
 
 const statusSteps: { name: Status; icon: React.ReactNode }[] = [
-    { name: 'Diterima', icon: <CircleDot className="h-5 w-5" /> },
-    { name: 'Diproses', icon: <Hourglass className="h-5 w-5" /> },
+    { name: 'Baru Masuk', icon: <CircleDot className="h-5 w-5" /> },
+    { name: 'Diproses Staf', icon: <Hourglass className="h-5 w-5" /> },
     { name: 'Verifikasi Kasi', icon: <UserCheck className="h-5 w-5" /> },
-    { name: 'Persetujuan Sekdes', icon: <UserCheck className="h-5 w-5" /> },
-    { name: 'TTE Kades', icon: <FileSignature className="h-5 w-5" /> },
-    { name: 'Dapat Diambil', icon: <MailCheck className="h-5 w-5" /> },
+    { name: 'Persetujuan Sekdes', icon: <ShieldCheck className="h-5 w-5" /> },
+    { name: 'Menunggu TTE Kades', icon: <FileSignature className="h-5 w-5" /> },
+    { name: 'Selesai & Dapat Diambil', icon: <MailCheck className="h-5 w-5" /> },
 ];
 
 interface StatusTimelineProps {

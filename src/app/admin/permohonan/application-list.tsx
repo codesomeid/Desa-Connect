@@ -1,3 +1,4 @@
+
 import {
   Table,
   TableBody,
@@ -33,14 +34,14 @@ const applications: Application[] = [
     applicantName: "Siti Aminah",
     letterType: "Surat Keterangan Usaha (SKU)",
     submissionDate: "2024-07-20",
-    status: "Diterima"
+    status: "Baru Masuk"
   },
   {
     id: "DS-CNCT-1689339",
     applicantName: "Ahmad Dahlan",
     letterType: "Surat Keterangan Tidak Mampu (SKTM)",
     submissionDate: "2024-07-20",
-    status: "Diproses"
+    status: "Diproses Staf"
   },
   {
     id: "DS-CNCT-1689338",
@@ -61,17 +62,24 @@ const applications: Application[] = [
     applicantName: "Dewi Lestari",
     letterType: "Surat Keterangan Pindah Domisili",
     submissionDate: "2024-07-18",
-    status: "Dapat Diambil"
+    status: "Selesai & Dapat Diambil"
+  },
+   {
+    id: "DS-CNCT-1689335",
+    applicantName: "Bambang Pamungkas",
+    letterType: "Surat Keterangan Usaha (SKU)",
+    submissionDate: "2024-07-17",
+    status: "Menunggu TTE Kades"
   },
 ];
 
-const statusVariant: { [key in Status]: "default" | "secondary" | "outline" | "destructive" } = {
-  'Diterima': 'secondary',
-  'Diproses': 'outline',
+const statusVariant: { [key in Status]?: "default" | "secondary" | "outline" | "destructive" } = {
+  'Baru Masuk': 'secondary',
+  'Diproses Staf': 'outline',
   'Verifikasi Kasi': 'outline',
   'Persetujuan Sekdes': 'outline',
-  'TTE Kades': 'default',
-  'Dapat Diambil': 'default',
+  'Menunggu TTE Kades': 'default',
+  'Selesai & Dapat Diambil': 'default',
 }
 
 
