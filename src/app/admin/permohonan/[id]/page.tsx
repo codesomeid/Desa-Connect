@@ -24,6 +24,8 @@ const allStatuses: Status[] = ['Baru Masuk', 'Diproses Staf', 'Verifikasi Kasi',
 export default function ApplicationDetailPage({ params }: { params: { id: string } }) {
   // In a real app, you'd use params.id to fetch the application data.
   // We'll use the dummy data for now.
+  const currentIndex = allStatuses.findIndex(s => s === application.status);
+  const nextStatus = currentIndex < allStatuses.length - 1 ? allStatuses[currentIndex + 1] : undefined;
   
   return (
     <div className="space-y-8">
@@ -78,7 +80,7 @@ export default function ApplicationDetailPage({ params }: { params: { id: string
                      <CardDescription>
                         Lacak dan lihat progres dari permohonan surat ini.
                     </CardDescription>
-                </CardHeader>
+                </Header>
                 <CardContent>
                     <StatusTimeline currentStatus={application.status} />
                 </CardContent>
@@ -91,7 +93,7 @@ export default function ApplicationDetailPage({ params }: { params: { id: string
                     <CardDescription>Ubah status atau lakukan tindakan lain pada permohonan ini.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    <StatusUpdater currentStatus={application.status} allStatuses={allStatuses} />
+                    <StatusUpdater currentStatus={application.status} nextStatus={nextStatus} />
                 </CardContent>
             </Card>
         </div>
