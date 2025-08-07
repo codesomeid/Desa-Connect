@@ -20,7 +20,6 @@ const application = {
 
 const allStatuses: Status[] = ['Baru Masuk', 'Diproses Staf', 'Verifikasi Kasi', 'Persetujuan Sekdes', 'Menunggu TTE Kades', 'Selesai & Dapat Diambil'];
 
-
 export default function ApplicationDetailPage({ params }: { params: { id: string } }) {
   // In a real app, you'd use params.id to fetch the application data.
   // We'll use the dummy data for now.
@@ -28,7 +27,7 @@ export default function ApplicationDetailPage({ params }: { params: { id: string
   const nextStatus = currentIndex < allStatuses.length - 1 ? allStatuses[currentIndex + 1] : undefined;
   
   return (
-    <div className="space-y-8">
+    <main className="space-y-8">
        <header className="flex items-center gap-4">
         <Button asChild variant="outline" size="icon">
           <Link href="/admin/permohonan">
@@ -98,6 +97,6 @@ export default function ApplicationDetailPage({ params }: { params: { id: string
             </Card>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
