@@ -31,6 +31,13 @@ const formSchema = z.object({
   letterName: z.string().min(5, { message: "Nama surat minimal 5 karakter." }),
   description: z.string().min(10, { message: "Deskripsi minimal 10 karakter." }),
   icon: z.string().optional(),
+  templateFile: z
+    .instanceof(typeof window !== 'undefined' ? File : Object)
+    .optional()
+    .refine(
+        (file) => !file || file.size === 0 || file.type === "application/pdf",
+        "Hanya file PDF yang diizinkan."
+    ),
 });
 
 interface EditLetterTypeFormProps {
@@ -73,13 +80,23 @@ export function EditLetterTypeForm({ letterType, onSuccess }: EditLetterTypeForm
     setIsLoading(true);
     // In a real app, you would send this to your backend to update the data.
     setTimeout(() => {
-      console.log("Updated data:", {id: letterType.id, ...values});
-      toast({
-        title: "Perubahan Disimpan",
-        description: `Jenis surat "${values.letterName}" telah berhasil diperbarui.`,
-      });
-      setIsLoading(false);
-      onSuccess(); // Call the callback to close the dialog
+        const updateData: any = {
+            id: letterType.id,
+            ...values,
+        };
+        if (values.templateFile && values.templateFile.size > 0) {
+            updateData.templateFileName = values.templateFile.name;
+            console.log("New PDF template uploaded:", values.templateFile.name);
+        }
+        delete updateData.templateFile; // Don't log the file object itself
+
+        console.log("Updated data:", updateData);
+        toast({
+            title: "Perubahan Disimpan",
+            description: `Jenis surat "${values.letterName}" telah berhasil diperbarui.`,
+        });
+        setIsLoading(false);
+        onSuccess(); // Call the callback to close the dialog
     }, 1500);
   }
 
@@ -146,9 +163,33 @@ export function EditLetterTypeForm({ letterType, onSuccess }: EditLetterTypeForm
           )}
         />
         
-        <p className="text-xs text-muted-foreground pt-1">
-          Perubahan pada template PDF tidak dapat dilakukan di sini.
-        </p>
+        <FormField
+          control={form.control}
+          name="templateFile"
+          render={({ field: { onChange, value, ...rest } }) => (
+            <FormItem>
+              <FormLabel>Ubah Template (PDF)</FormLabel>
+              <FormControl>
+                <Input
+                  type="file"
+                  accept="application/pdf"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      onChange(file);
+                    }
+                  }}
+                  {...rest}
+                  className="file:text-foreground"
+                />
+              </FormControl>
+              <p className="text-xs text-muted-foreground pt-1">
+                Kosongkan jika tidak ingin mengubah template PDF yang sudah ada.
+              </p>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         
         <div className="flex justify-end">
           <Button type="submit" disabled={isLoading}>
