@@ -1,4 +1,6 @@
 
+"use client";
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { AddLetterTypeForm } from "./add-letter-type-form";
 import {
@@ -9,7 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { MoreHorizontal, Eye } from "lucide-react";
+import { MoreHorizontal, Eye, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -17,7 +19,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { letterTypes } from "@/lib/data";
+import { letterTypes, type LetterType } from "@/lib/data";
+import { useState, useEffect } from "react";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const handleViewTemplate = (url: string | undefined) => {
   if (url) {
@@ -27,6 +32,17 @@ const handleViewTemplate = (url: string | undefined) => {
 
 
 export default function LetterTypeManagementPage() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredLetters, setFilteredLetters] = useState<LetterType[]>(letterTypes);
+
+  useEffect(() => {
+    const results = letterTypes.filter(letter =>
+      letter.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      letter.description.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredLetters(results);
+  }, [searchTerm]);
+
   return (
     <div className="space-y-8">
       <header className="space-y-2">
@@ -55,44 +71,63 @@ export default function LetterTypeManagementPage() {
                     <CardDescription>Daftar semua jenis surat yang saat ini tersedia dalam sistem.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                     <Table>
-                        <TableHeader>
-                            <TableRow>
-                            <TableHead className="w-12">Ikon</TableHead>
-                            <TableHead>Nama Surat</TableHead>
-                            <TableHead>Deskripsi</TableHead>
-                            <TableHead className="text-right">Aksi</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {letterTypes.map((letter) => (
-                            <TableRow key={letter.name}>
-                                <TableCell>{letter.icon}</TableCell>
-                                <TableCell className="font-medium">{letter.name}</TableCell>
-                                <TableCell className="text-muted-foreground">{letter.description}</TableCell>
-                                <TableCell className="text-right">
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                        <Button size="icon" variant="ghost">
-                                            <MoreHorizontal className="h-4 w-4" />
-                                        </Button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent align="end">
-                                        <DropdownMenuItem onSelect={() => handleViewTemplate(letter.templateUrl)} disabled={!letter.templateUrl}>
-                                          <Eye className="mr-2 h-4 w-4" />
-                                          Lihat Template
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem>Ubah</DropdownMenuItem>
-                                        <DropdownMenuItem className="text-destructive hover:!text-destructive-foreground hover:!bg-destructive">
-                                            Hapus
-                                        </DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
-                                </TableCell>
-                            </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
+                    <div className="relative mb-4">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input
+                            placeholder="Cari nama atau deskripsi surat..."
+                            className="pl-9"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
+                     <ScrollArea className="h-[500px]">
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                <TableHead className="w-12">Ikon</TableHead>
+                                <TableHead>Nama Surat</TableHead>
+                                <TableHead>Deskripsi</TableHead>
+                                <TableHead className="text-right">Aksi</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {filteredLetters.length > 0 ? (
+                                    filteredLetters.map((letter) => (
+                                    <TableRow key={letter.id}>
+                                        <TableCell>{letter.icon}</TableCell>
+                                        <TableCell className="font-medium">{letter.name}</TableCell>
+                                        <TableCell className="text-muted-foreground">{letter.description}</TableCell>
+                                        <TableCell className="text-right">
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                <Button size="icon" variant="ghost">
+                                                    <MoreHorizontal className="h-4 w-4" />
+                                                </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent align="end">
+                                                <DropdownMenuItem onSelect={() => handleViewTemplate(letter.templateUrl)} disabled={!letter.templateUrl}>
+                                                  <Eye className="mr-2 h-4 w-4" />
+                                                  Lihat Template
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem>Ubah</DropdownMenuItem>
+                                                <DropdownMenuItem className="text-destructive hover:!text-destructive-foreground hover:!bg-destructive">
+                                                    Hapus
+                                                </DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </TableCell>
+                                    </TableRow>
+                                    ))
+                                ) : (
+                                    <TableRow>
+                                        <TableCell colSpan={4} className="h-24 text-center text-muted-foreground">
+                                            Tidak ada surat yang cocok dengan pencarian Anda.
+                                        </TableCell>
+                                    </TableRow>
+                                )}
+                            </TableBody>
+                        </Table>
+                     </ScrollArea>
                 </CardContent>
             </Card>
         </div>
