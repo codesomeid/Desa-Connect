@@ -56,7 +56,14 @@ export default function NewApplicationPage() {
 
   function onSubmit(data: ApplicationFormValues) {
     setIsLoading(true);
-    console.log('Submitting application:', data);
+    // In a real app, this would create a new `Permohonan_Surat` entry in the database.
+    console.log('Submitting application:', {
+        id_masyarakat: 1, // FAKE_LOGGED_IN_USER_ID
+        id_jenis_surat: parseInt(data.letterTypeId),
+        alasan_permohonan: data.reason,
+        status: 'Diajukan',
+        tanggal_permohonan: new Date().toISOString()
+    });
     
     // Simulate API call
     setTimeout(() => {
@@ -110,8 +117,8 @@ export default function NewApplicationPage() {
                       </FormControl>
                       <SelectContent>
                         {letterTypes.map(lt => (
-                          <SelectItem key={lt.id} value={lt.id}>
-                            {lt.name}
+                          <SelectItem key={lt.id_jenis_surat} value={lt.id_jenis_surat.toString()}>
+                            {lt.nama_surat}
                           </SelectItem>
                         ))}
                       </SelectContent>

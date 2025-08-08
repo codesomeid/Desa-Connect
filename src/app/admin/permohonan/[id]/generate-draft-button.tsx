@@ -5,13 +5,10 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { FileDown, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import type { PermohonanSurat, Masyarakat } from '@/lib/data';
 
 interface GenerateDraftButtonProps {
-    application: {
-        id: string;
-        userName: string;
-        reason: string;
-    };
+    application: PermohonanSurat & { pemohon: Masyarakat };
 }
 
 export default function GenerateDraftButton({ application }: GenerateDraftButtonProps) {
@@ -27,23 +24,24 @@ export default function GenerateDraftButton({ application }: GenerateDraftButton
 
         // In a real application, you would:
         // 1. Call a server-side function/API endpoint.
-        // 2. This endpoint would fetch the PDF template.
+        // 2. This endpoint would fetch the PDF template (`template_path`).
         // 3. It would use a library like `pdf-lib` to fill the form fields
-        //    with data from the application (e.g., userName, reason, etc.).
-        // 4. Return the filled PDF as a downloadable file.
+        //    with data from the application (e.g., pemohon.nama_lengkap, alasan_permohonan, etc.).
+        // 4. It would create a new `Surat_Keluar` entry in the database.
+        // 5. Return the filled PDF as a downloadable file (`file_final_path`).
 
         // Here, we just simulate the process.
         setTimeout(() => {
             setIsLoading(false);
             toast({
                 title: 'Draf Siap Diunduh',
-                description: 'Draf surat PDF berhasil dibuat.',
+                description: 'Draf surat PDF berhasil dibuat dan entri Surat Keluar telah dicatat.',
             });
             // Simulate a file download. In a real app, this would be the actual file URL.
-            const fakePdfUrl = `/path/to/fake-draft-${application.id}.pdf`;
+            const fakePdfUrl = `/path/to/fake-draft-${application.id_permohonan}.pdf`;
             const link = document.createElement('a');
             link.href = fakePdfUrl;
-            link.setAttribute('download', `DRAF-${application.userName}.pdf`);
+            link.setAttribute('download', `DRAF-${application.pemohon.nama_lengkap}.pdf`);
             document.body.appendChild(link);
             link.click();
             link.remove();

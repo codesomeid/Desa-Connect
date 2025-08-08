@@ -1,15 +1,16 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { BarChart, Users, FileText, CheckSquare } from 'lucide-react';
+import { BarChart, Users, FileText, CheckSquare, GitPullRequestDraft } from 'lucide-react';
+import { applications } from "@/lib/data";
 
 // This is a mock data fetching function.
 // In a real application, you would fetch this data from your database.
 async function getDashboardStats() {
-    // For now, we'll use some static numbers.
     return {
-        totalApplications: 78,
-        pendingApplications: 5,
-        approvedApplications: 65,
-        totalUsers: 152,
+        totalApplications: applications.length,
+        pendingApplications: applications.filter(a => a.status === 'Diajukan').length,
+        processedApplications: applications.filter(a => a.status === 'Diproses').length,
+        completedApplications: applications.filter(a => a.status === 'Selesai').length,
+        totalUsers: 152, // Assuming this count is from another source
     };
 }
 
@@ -39,32 +40,32 @@ export default async function DashboardPage() {
                 </Card>
                  <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Permohonan Pending</CardTitle>
-                        <CheckSquare className="h-4 w-4 text-muted-foreground" />
+                        <CardTitle className="text-sm font-medium">Permohonan Diajukan</CardTitle>
+                        <GitPullRequestDraft className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{stats.pendingApplications}</div>
-                        <p className="text-xs text-muted-foreground">Permohonan yang butuh diproses</p>
+                        <p className="text-xs text-muted-foreground">Permohonan perlu diverifikasi</p>
                     </CardContent>
                 </Card>
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Permohonan Disetujui</CardTitle>
+                        <CardTitle className="text-sm font-medium">Permohonan Diproses</CardTitle>
                         <CheckSquare className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">{stats.approvedApplications}</div>
-                        <p className="text-xs text-muted-foreground">Total permohonan yang selesai</p>
+                        <div className="text-2xl font-bold">{stats.processedApplications}</div>
+                        <p className="text-xs text-muted-foreground">Permohonan dalam proses</p>
                     </CardContent>
                 </Card>
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Total Pengguna</CardTitle>
+                        <CardTitle className="text-sm font-medium">Permohonan Selesai</CardTitle>
                         <Users className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">{stats.totalUsers}</div>
-                        <p className="text-xs text-muted-foreground">Jumlah warga yang terdaftar</p>
+                        <div className="text-2xl font-bold">{stats.completedApplications}</div>
+                        <p className="text-xs text-muted-foreground">Jumlah permohonan selesai</p>
                     </CardContent>
                 </Card>
             </div>

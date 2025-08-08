@@ -15,30 +15,31 @@ import {
 } from '@/components/ui/table';
 
 // In a real app, this would be the ID of the currently logged-in user.
-const FAKE_LOGGED_IN_USER_ID = 'user-1';
+const FAKE_LOGGED_IN_USER_ID = 1;
 
 async function getWargaData() {
-  const user = users.find(u => u.id === FAKE_LOGGED_IN_USER_ID);
+  const user = users.find(u => u.id_masyarakat === FAKE_LOGGED_IN_USER_ID);
   const userApplications = applications
-    .filter(app => app.userId === FAKE_LOGGED_IN_USER_ID)
+    .filter(app => app.id_masyarakat === FAKE_LOGGED_IN_USER_ID)
     .map(app => {
-      const letterType = letterTypes.find(lt => lt.id === app.letterTypeId);
+      const letterType = letterTypes.find(lt => lt.id_jenis_surat === app.id_jenis_surat);
       return {
         ...app,
-        letterName: letterType?.name || 'Surat Tidak Ditemukan',
+        nama_surat: letterType?.nama_surat || 'Surat Tidak Ditemukan',
       };
     })
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    .sort((a, b) => new Date(b.tanggal_permohonan).getTime() - new Date(a.tanggal_permohonan).getTime());
 
   return { user, userApplications };
 }
 
 const statusVariantMap: { [key in ApplicationStatus]: "default" | "secondary" | "destructive" | "outline" } = {
-  'Pending': 'secondary',
+  'Diajukan': 'secondary',
+  'Diverifikasi': 'default',
   'Diproses': 'default',
+  'Ditolak': 'destructive',
   'Siap Diambil': 'outline',
   'Selesai': 'default',
-  'Ditolak': 'destructive',
 };
 
 
@@ -52,7 +53,7 @@ export default async function WargaDashboardPage() {
   return (
     <div className="space-y-8">
       <header className="space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight">Selamat Datang, {user.name}!</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Selamat Datang, {user.nama_lengkap}!</h1>
         <p className="text-muted-foreground">
           Ini adalah dashboard Anda untuk mengelola semua layanan persuratan desa.
         </p>
@@ -80,7 +81,7 @@ export default async function WargaDashboardPage() {
           <CardTitle>Riwayat Permohonan Surat Anda</CardTitle>
           <CardDescription>
             Lacak status semua permohonan yang telah Anda ajukan.
-          </CardDescription>
+          </Description>
         </CardHeader>
         <CardContent>
           <div className="rounded-md border">
@@ -96,9 +97,9 @@ export default async function WargaDashboardPage() {
               <TableBody>
                 {userApplications.length > 0 ? (
                   userApplications.map(app => (
-                    <TableRow key={app.id}>
-                      <TableCell className="font-medium">{app.letterName}</TableCell>
-                      <TableCell>{new Date(app.date).toLocaleDateString('id-ID')}</TableCell>
+                    <TableRow key={app.id_permohonan}>
+                      <TableCell className="font-medium">{app.nama_surat}</TableCell>
+                      <TableCell>{new Date(app.tanggal_permohonan).toLocaleDateString('id-ID')}</TableCell>
                       <TableCell>
                         <Badge variant={statusVariantMap[app.status]}>
                           {app.status}

@@ -11,11 +11,12 @@ import { Textarea } from '@/components/ui/textarea';
 
 interface StatusUpdaterProps {
   currentStatus: ApplicationStatus;
-  applicationId: string;
+  applicationId: number;
 }
 
 const statusFlow: { [key in ApplicationStatus]?: ApplicationStatus[] } = {
-  'Pending': ['Diproses', 'Ditolak'],
+  'Diajukan': ['Diverifikasi', 'Ditolak'],
+  'Diverifikasi': ['Diproses', 'Ditolak'],
   'Diproses': ['Siap Diambil', 'Ditolak'],
   'Siap Diambil': ['Selesai'],
   'Selesai': [],
@@ -51,6 +52,7 @@ export default function StatusUpdater({ currentStatus, applicationId }: StatusUp
 
     setIsLoading(true);
     // In a real app, you'd make an API call here.
+    // This would also create a new entry in `Log_Aktivitas`
     console.log({
       applicationId,
       newStatus: selectedStatus,

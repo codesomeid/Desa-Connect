@@ -4,17 +4,19 @@ import ApplicationList from './application-list';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function ApplicationManagementPage() {
-  // In a real app, you would fetch this data from an API
+  // In a real app, you would fetch this data from an API using a JOIN query
   const fullApplications = applications.map(app => {
-    const user = users.find(u => u.id === app.userId);
-    const letterType = letterTypes.find(lt => lt.id === app.letterTypeId);
+    const user = users.find(u => u.id_masyarakat === app.id_masyarakat);
+    const letterType = letterTypes.find(lt => lt.id_jenis_surat === app.id_jenis_surat);
     return {
-      ...app,
-      userName: user?.name || 'Pengguna Tidak Ditemukan',
-      userNIP: user?.nik || '-', // Using NIK as NIP for this context
-      letterName: letterType?.name || 'Surat Tidak Ditemukan',
+      id_permohonan: app.id_permohonan,
+      nama_lengkap_pemohon: user?.nama_lengkap || 'Pengguna Tidak Ditemukan',
+      nik_pemohon: user?.nik || '-',
+      nama_surat: letterType?.nama_surat || 'Surat Tidak Ditemukan',
+      tanggal_permohonan: app.tanggal_permohonan,
+      status: app.status
     }
-  });
+  }).sort((a,b) => b.id_permohonan - a.id_permohonan); // Sort descending by ID
 
   return (
     <div className="space-y-8">

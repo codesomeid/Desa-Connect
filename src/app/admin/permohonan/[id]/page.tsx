@@ -1,7 +1,7 @@
 
 import Link from 'next/link';
 import { ArrowLeft, FileText, User, Calendar, Info } from 'lucide-react';
-import { applications, users, letterTypes, ApplicationStatus } from '@/lib/data';
+import { applications, users, letterTypes, ApplicationStatus, aparatur, suratKeluar } from '@/lib/data';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,15 +11,17 @@ import StatusUpdater from './status-updater';
 import GenerateDraftButton from './generate-draft-button';
 
 const statusVariantMap: { [key in ApplicationStatus]: "default" | "secondary" | "destructive" | "outline" } = {
-  'Pending': 'secondary',
+  'Diajukan': 'secondary',
+  'Diverifikasi': 'default',
   'Diproses': 'default',
+  'Ditolak': 'destructive',
   'Siap Diambil': 'outline',
   'Selesai': 'default',
-  'Ditolak': 'destructive',
 };
 
 const statusDescriptions: { [key in ApplicationStatus]: string } = {
-    'Pending': 'Permohonan telah diterima dan menunggu verifikasi oleh admin.',
+    'Diajukan': 'Permohonan telah diterima dan menunggu verifikasi oleh admin.',
+    'Diverifikasi': 'Permohonan telah diperiksa dan valid. Menunggu proses selanjutnya.',
     'Diproses': 'Permohonan sedang diproses, data sedang dimasukkan ke template.',
     'Siap Diambil': 'Surat telah selesai diproses dan dapat diambil di kantor desa.',
     'Selesai': 'Surat telah diserahkan kepada pemohon.',
@@ -28,20 +30,23 @@ const statusDescriptions: { [key in ApplicationStatus]: string } = {
 
 // This function simulates fetching data from a database.
 async function getApplicationDetails(id: string) {
-  const application = applications.find(app => app.id === id);
+  const application = applications.find(app => app.id_permohonan === parseInt(id));
   if (!application) {
     return null;
   }
 
-  const user = users.find(u => u.id === application.userId);
-  const letterType = letterTypes.find(lt => lt.id === application.letterTypeId);
+  const user = users.find(u => u.id_masyarakat === application.id_masyarakat);
+  const letterType = letterTypes.find(lt => lt.id_jenis_surat === application.id_jenis_surat);
+  const generatedLetter = suratKeluar.find(sk => sk.id_permohonan === application.id_permohonan);
+  const signatory = generatedLetter ? aparatur.find(a => a.id_aparat === generatedLetter.id_penandatangan) : null;
+
+  if (!user || !letterType) return null;
 
   return {
     ...application,
-    userName: user?.name || 'N/A',
-    userNIP: user?.nik || 'N/A',
-    userPhone: user?.phoneNumber || 'N/A',
-    letterName: letterType?.name || 'N/A',
+    pemohon: user,
+    jenisSurat: letterType,
+    suratKeluar: generatedLetter ? { ...generatedLetter, penandatangan: signatory } : null
   };
 }
 
@@ -63,7 +68,7 @@ export default async function ApplicationDetailPage({ params }: { params: { id: 
         </Button>
         <div>
             <div className="flex items-center gap-3">
-                 <h1 className="text-2xl font-bold tracking-tight">Detail Permohonan</h1>
+                 <h1 className="text-2xl font-bold tracking-tight">Detail Permohonan #{application.id_permohonan}</h1>
                  <Badge variant={statusVariantMap[application.status]}>{application.status}</Badge>
             </div>
             <p className="text-muted-foreground">
@@ -81,15 +86,15 @@ export default async function ApplicationDetailPage({ params }: { params: { id: 
                 <CardContent className="space-y-4">
                     <div>
                         <p className="text-sm font-medium text-muted-foreground">Jenis Surat</p>
-                        <p className="font-semibold">{application.letterName}</p>
+                        <p className="font-semibold">{application.jenisSurat.nama_surat}</p>
                     </div>
                      <div>
                         <p className="text-sm font-medium text-muted-foreground">Tanggal Pengajuan</p>
-                        <p>{new Date(application.date).toLocaleString('id-ID', { dateStyle: 'full', timeStyle: 'short' })}</p>
+                        <p>{new Date(application.tanggal_permohonan).toLocaleString('id-ID', { dateStyle: 'full', timeStyle: 'short' })}</p>
                     </div>
                     <div>
                         <p className="text-sm font-medium text-muted-foreground">Alasan Permohonan</p>
-                        <p className="text-sm p-4 bg-muted/50 rounded-md whitespace-pre-wrap">{application.reason}</p>
+                        <p className="text-sm p-4 bg-muted/50 rounded-md whitespace-pre-wrap">{application.alasan_permohonan}</p>
                     </div>
                 </CardContent>
             </Card>
@@ -101,15 +106,19 @@ export default async function ApplicationDetailPage({ params }: { params: { id: 
                 <CardContent className="space-y-4">
                     <div>
                         <p className="text-sm font-medium text-muted-foreground">Nama Lengkap</p>
-                        <p className="font-semibold">{application.userName}</p>
+                        <p className="font-semibold">{application.pemohon.nama_lengkap}</p>
                     </div>
                      <div>
                         <p className="text-sm font-medium text-muted-foreground">Nomor Induk Kependudukan (NIK)</p>
-                        <p>{application.userNIP}</p>
+                        <p>{application.pemohon.nik}</p>
                     </div>
                      <div>
                         <p className="text-sm font-medium text-muted-foreground">Nomor Telepon</p>
-                        <p>{application.userPhone}</p>
+                        <p>{application.pemohon.no_telepon}</p>
+                    </div>
+                     <div>
+                        <p className="text-sm font-medium text-muted-foreground">Alamat</p>
+                        <p>{application.pemohon.alamat}</p>
                     </div>
                 </CardContent>
             </Card>
@@ -122,19 +131,19 @@ export default async function ApplicationDetailPage({ params }: { params: { id: 
                     <CardDescription>Lakukan tindakan pada permohonan ini.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    <StatusUpdater currentStatus={application.status} applicationId={application.id} />
+                    <StatusUpdater currentStatus={application.status} applicationId={application.id_permohonan} />
                     <Separator />
                     <GenerateDraftButton application={application} />
                 </CardContent>
             </Card>
 
-             {application.notes && (
+             {application.catatan_admin && (
                 <Card className="bg-amber-50 border-amber-200">
                     <CardHeader>
-                        <CardTitle className="flex items-center gap-2 text-amber-900"><Info /> Catatan</CardTitle>
+                        <CardTitle className="flex items-center gap-2 text-amber-900"><Info /> Catatan Admin</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-sm text-amber-800">{application.notes}</p>
+                        <p className="text-sm text-amber-800">{application.catatan_admin}</p>
                     </CardContent>
                 </Card>
              )}

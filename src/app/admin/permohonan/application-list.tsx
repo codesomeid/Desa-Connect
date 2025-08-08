@@ -16,33 +16,26 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ApplicationStatus } from '@/lib/data';
 
-type Application = {
-  id: string;
-  userName: string;
-  userNIP: string;
-  letterName: string;
-  date: string;
+type ApplicationListItem = {
+  id_permohonan: number;
+  nama_lengkap_pemohon: string;
+  nik_pemohon: string;
+  nama_surat: string;
+  tanggal_permohonan: string;
   status: ApplicationStatus;
 };
 
 interface ApplicationListProps {
-  applications: Application[];
+  applications: ApplicationListItem[];
 }
 
 const statusVariantMap: { [key in ApplicationStatus]: "default" | "secondary" | "destructive" | "outline" } = {
-  'Pending': 'secondary',
+  'Diajukan': 'secondary',
+  'Diverifikasi': 'default',
   'Diproses': 'default',
+  'Ditolak': 'destructive',
   'Siap Diambil': 'outline',
   'Selesai': 'default',
-  'Ditolak': 'destructive',
-};
-
-const statusTextMap: { [key in ApplicationStatus]: string } = {
-    'Pending': 'Pending',
-    'Diproses': 'Diproses',
-    'Siap Diambil': 'Siap Diambil',
-    'Selesai': 'Selesai',
-    'Ditolak': 'Ditolak',
 };
 
 
@@ -55,14 +48,14 @@ export default function ApplicationList({ applications }: ApplicationListProps) 
     .filter(app => {
       const searchLower = searchTerm.toLowerCase();
       return (
-        app.userName.toLowerCase().includes(searchLower) ||
-        app.userNIP.includes(searchLower) ||
-        app.letterName.toLowerCase().includes(searchLower)
+        app.nama_lengkap_pemohon.toLowerCase().includes(searchLower) ||
+        app.nik_pemohon.includes(searchLower) ||
+        app.nama_surat.toLowerCase().includes(searchLower)
       );
     })
     .filter(app => statusFilter === 'all' || app.status === statusFilter);
 
-  const handleRowClick = (id: string) => {
+  const handleRowClick = (id: number) => {
     router.push(`/admin/permohonan/${id}`);
   };
 
@@ -70,7 +63,7 @@ export default function ApplicationList({ applications }: ApplicationListProps) 
     <div className="space-y-4">
         <div className="flex gap-4">
             <Input
-                placeholder="Cari berdasarkan nama, NIP, atau jenis surat..."
+                placeholder="Cari berdasarkan nama, NIK, atau jenis surat..."
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
                 className="max-w-sm"
@@ -81,7 +74,8 @@ export default function ApplicationList({ applications }: ApplicationListProps) 
                 </SelectTrigger>
                 <SelectContent>
                     <SelectItem value="all">Semua Status</SelectItem>
-                    <SelectItem value="Pending">Pending</SelectItem>
+                    <SelectItem value="Diajukan">Diajukan</SelectItem>
+                    <SelectItem value="Diverifikasi">Diverifikasi</SelectItem>
                     <SelectItem value="Diproses">Diproses</SelectItem>
                     <SelectItem value="Siap Diambil">Siap Diambil</SelectItem>
                     <SelectItem value="Selesai">Selesai</SelectItem>
@@ -94,7 +88,7 @@ export default function ApplicationList({ applications }: ApplicationListProps) 
           <TableHeader>
             <TableRow>
               <TableHead>Nama Pemohon</TableHead>
-              <TableHead>NIP</TableHead>
+              <TableHead>NIK</TableHead>
               <TableHead>Jenis Surat</TableHead>
               <TableHead>Tanggal</TableHead>
               <TableHead>Status</TableHead>
@@ -103,14 +97,14 @@ export default function ApplicationList({ applications }: ApplicationListProps) 
           <TableBody>
             {filteredApplications.length > 0 ? (
               filteredApplications.map(app => (
-                <TableRow key={app.id} onClick={() => handleRowClick(app.id)} className="cursor-pointer">
-                  <TableCell className="font-medium">{app.userName}</TableCell>
-                  <TableCell>{app.userNIP}</TableCell>
-                  <TableCell>{app.letterName}</TableCell>
-                  <TableCell>{new Date(app.date).toLocaleDateString()}</TableCell>
+                <TableRow key={app.id_permohonan} onClick={() => handleRowClick(app.id_permohonan)} className="cursor-pointer">
+                  <TableCell className="font-medium">{app.nama_lengkap_pemohon}</TableCell>
+                  <TableCell>{app.nik_pemohon}</TableCell>
+                  <TableCell>{app.nama_surat}</TableCell>
+                  <TableCell>{new Date(app.tanggal_permohonan).toLocaleDateString()}</TableCell>
                   <TableCell>
                      <Badge variant={statusVariantMap[app.status]}>
-                        {statusTextMap[app.status]}
+                        {app.status}
                     </Badge>
                   </TableCell>
                 </TableRow>
