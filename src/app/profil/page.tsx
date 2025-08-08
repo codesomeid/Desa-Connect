@@ -1,19 +1,22 @@
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Mail, Phone, User, LogOut } from "lucide-react";
 import { ApplicationHistory } from "./application-history";
+import { users } from "@/lib/data";
+import { notFound } from "next/navigation";
+
+// Dummy logged in user ID
+const loggedInUserId = "user-001";
 
 export default function ProfilePage() {
-    // Dummy user data
-    const user = {
-        name: "Budi Santoso",
-        email: "budi.santoso@email.com",
-        phone: "0812-3456-7890",
-        nik: "3501234567890001",
-        avatar: "https://placehold.co/100x100.png"
-    };
+    const user = users.find(u => u.id === loggedInUserId);
+
+    if (!user) {
+        notFound();
+    }
 
     return (
         <div className="space-y-8">

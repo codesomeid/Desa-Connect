@@ -9,14 +9,12 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Loader2, Search, TriangleAlert } from "lucide-react";
 import { StatusTimeline, type Status } from "./status-timeline";
 import { useSearchParams } from "next/navigation";
+import { applications, users, letterTypes, type Application } from "@/lib/data";
 
-type ApplicationStatus = {
-  id: string;
-  name: string;
-  letterType: string;
-  status: Status;
-  date: Date;
-};
+interface ApplicationStatus extends Application {
+  applicantName: string;
+  letterTypeName: string;
+}
 
 export function ApplicationTracker() {
   const searchParams = useSearchParams();
@@ -27,14 +25,21 @@ export function ApplicationTracker() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
-  useEffect(() => {
-    if (idFromQuery) {
-        setAppId(idFromQuery);
-        // Automatically trigger search if ID comes from query param
-        handleSearch(null, idFromQuery);
+  const findApplication = (id: string): ApplicationStatus | null => {
+    const application = applications.find(app => app.id === id);
+    if (!application) {
+      return null;
     }
-  }, [idFromQuery]);
+    const applicant = users.find(user => user.id === application.applicantId);
+    const letterType = letterTypes.find(lt => lt.id === application.letterTypeId);
 
+    return {
+      ...application,
+      submissionDate: application.submissionDate,
+      applicantName: applicant?.name || "Tidak Ditemukan",
+      letterTypeName: letterType?.name || "Tidak Ditemukan",
+    };
+  }
 
   const handleSearch = (e: React.FormEvent | null, searchId?: string) => {
     e?.preventDefault();
@@ -51,23 +56,24 @@ export function ApplicationTracker() {
 
     // Simulate API call
     setTimeout(() => {
-      if (finalAppId.startsWith("DS-CNCT-")) {
-        const statuses: Status[] = ['Baru Masuk', 'Diproses Staf', 'Verifikasi Kasi', 'Persetujuan Sekdes', 'Menunggu TTE Kades', 'Selesai & Dapat Diambil'];
-        const randomStatusIndex = Math.floor(Math.random() * statuses.length);
-        const randomStatus = statuses[randomStatusIndex];
-        setStatus({
-          id: finalAppId,
-          name: "Budi Santoso",
-          letterType: "Surat Keterangan Usaha",
-          status: randomStatus,
-          date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
-        });
+      const foundApp = findApplication(finalAppId);
+      if (foundApp) {
+        setStatus(foundApp);
       } else {
         setError(`Permohonan dengan nomor "${finalAppId}" tidak ditemukan. Pastikan nomor yang Anda masukkan benar.`);
       }
       setIsLoading(false);
     }, 1500);
   };
+  
+  useEffect(() => {
+    if (idFromQuery) {
+        setAppId(idFromQuery);
+        // Automatically trigger search if ID comes from query param
+        handleSearch(null, idFromQuery);
+    }
+  }, [idFromQuery]);
+
 
   return (
     <div className="space-y-6">
@@ -117,15 +123,15 @@ export function ApplicationTracker() {
             <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
                     <p className="text-muted-foreground">Nama Pemohon</p>
-                    <p className="font-semibold">{status.name}</p>
+                    <p className="font-semibold">{status.applicantName}</p>
                 </div>
                  <div>
                     <p className="text-muted-foreground">Jenis Surat</p>
-                    <p className="font-semibold">{status.letterType}</p>
+                    <p className="font-semibold">{status.letterTypeName}</p>
                 </div>
                 <div>
                     <p className="text-muted-foreground">Tanggal Pengajuan</p>
-                    <p className="font-semibold">{status.date.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                    <p className="font-semibold">{new Date(status.submissionDate).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
                 </div>
             </div>
             <div>

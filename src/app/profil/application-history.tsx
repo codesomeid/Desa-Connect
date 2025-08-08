@@ -13,35 +13,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { ListChecks } from "lucide-react";
 import Link from "next/link";
+import { applications, letterTypes } from "@/lib/data";
 
-type Application = {
-  id: string;
-  letterType: string;
-  submissionDate: string;
-  status: Status;
-};
-
-// Dummy data for user's application history
-const history: Application[] = [
-  {
-    id: "DS-CNCT-1689336",
-    letterType: "Surat Keterangan Pindah Domisili",
-    submissionDate: "2024-07-18",
-    status: "Selesai & Dapat Diambil"
-  },
-  {
-    id: "DS-CNCT-1689250",
-    letterType: "Surat Keterangan Usaha (SKU)",
-    submissionDate: "2024-06-12",
-    status: "Selesai & Dapat Diambil"
-  },
-    {
-    id: "DS-CNCT-1689105",
-    letterType: "Surat Pengantar Keterangan Catatan Kepolisian",
-    submissionDate: "2024-05-01",
-    status: "Selesai & Dapat Diambil"
-  },
-];
+// Dummy user ID for demonstration
+const currentUserId = "user-001";
 
 const statusVariant: { [key in Status]?: "default" | "secondary" | "outline" | "destructive" } = {
   'Baru Masuk': 'secondary',
@@ -54,6 +29,13 @@ const statusVariant: { [key in Status]?: "default" | "secondary" | "outline" | "
 
 
 export function ApplicationHistory() {
+  // Filter applications for the current user
+  const userApplications = applications.filter(app => app.applicantId === currentUserId);
+
+  const getLetterTypeName = (letterTypeId: string) => {
+    return letterTypes.find(lt => lt.id === letterTypeId)?.name || 'Tidak Dikenali';
+  }
+
   return (
     <Card>
         <CardHeader>
@@ -74,10 +56,10 @@ export function ApplicationHistory() {
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {history.map((app) => (
+                {userApplications.map((app) => (
                 <TableRow key={app.id}>
                     <TableCell className="font-mono text-muted-foreground text-xs">{app.id}</TableCell>
-                    <TableCell className="font-medium">{app.letterType}</TableCell>
+                    <TableCell className="font-medium">{getLetterTypeName(app.letterTypeId)}</TableCell>
                     <TableCell>{new Date(app.submissionDate).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}</TableCell>
                     <TableCell>
                     <Badge variant={statusVariant[app.status] ?? 'secondary'}>

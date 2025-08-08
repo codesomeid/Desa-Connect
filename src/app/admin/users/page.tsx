@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { AddUserForm } from "./add-user-form";
 import {
@@ -9,24 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge";
-
-const users = [
-  {
-    name: "Budi Santoso",
-    email: "budi.santoso@email.com",
-    role: "Warga",
-  },
-  {
-    name: "Admin Desa",
-    email: "admin@desa.com",
-    role: "Aparatur Desa",
-  },
-    {
-    name: "Siti Aminah",
-    email: "siti.aminah@email.com",
-    role: "Warga",
-  },
-];
+import { users } from "@/lib/data";
 
 
 export default function UserManagementPage() {
@@ -63,6 +47,7 @@ export default function UserManagementPage() {
                             <TableRow>
                             <TableHead>Nama</TableHead>
                             <TableHead>Email</TableHead>
+                            <TableHead>Peran</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -70,6 +55,11 @@ export default function UserManagementPage() {
                             <TableRow key={user.email}>
                                 <TableCell className="font-medium">{user.name}</TableCell>
                                 <TableCell>{user.email}</TableCell>
+                                <TableCell>
+                                    <Badge variant={user.role === "Aparatur Desa" ? "default" : "secondary"}>
+                                        {user.role}
+                                    </Badge>
+                                </TableCell>
                             </TableRow>
                             ))}
                         </TableBody>

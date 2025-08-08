@@ -6,23 +6,21 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import { StatusUpdater } from "./status-updater";
-
-// Dummy data for a single application. In a real app, you would fetch this.
-const application = {
-    id: "DS-CNCT-1689340",
-    applicantName: "Siti Aminah",
-    nik: "3501234567890002",
-    letterType: "Surat Keterangan Usaha (SKU)",
-    submissionDate: "2024-07-20",
-    purpose: "Untuk mengajukan pinjaman KUR di Bank BRI sebagai modal tambahan untuk usaha warung kelontong yang sudah berjalan selama 2 tahun.",
-    status: "Baru Masuk" as Status
-};
+import { applications, users, letterTypes } from "@/lib/data";
+import { notFound } from "next/navigation";
 
 const allStatuses: Status[] = ['Baru Masuk', 'Diproses Staf', 'Verifikasi Kasi', 'Persetujuan Sekdes', 'Menunggu TTE Kades', 'Selesai & Dapat Diambil'];
 
 export default function ApplicationDetailPage({ params }: { params: { id: string } }) {
-  // In a real app, you'd use params.id to fetch the application data.
-  // We'll use the dummy data for now.
+  const application = applications.find(app => app.id === params.id);
+
+  if (!application) {
+    notFound();
+  }
+
+  const applicant = users.find(user => user.id === application.applicantId);
+  const letterType = letterTypes.find(lt => lt.id === application.letterTypeId);
+
   const currentIndex = allStatuses.findIndex(s => s === application.status);
   const nextStatus = currentIndex < allStatuses.length - 1 ? allStatuses[currentIndex + 1] : undefined;
   
@@ -51,15 +49,15 @@ export default function ApplicationDetailPage({ params }: { params: { id: string
                     <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
                         <div>
                             <p className="text-muted-foreground">Nama Lengkap</p>
-                            <p className="font-medium">{application.applicantName}</p>
+                            <p className="font-medium">{applicant?.name || 'N/A'}</p>
                         </div>
                          <div>
                             <p className="text-muted-foreground">NIK</p>
-                            <p className="font-medium">{application.nik}</p>
+                            <p className="font-medium">{applicant?.nik || 'N/A'}</p>
                         </div>
                          <div>
                             <p className="text-muted-foreground">Jenis Surat</p>
-                            <p className="font-medium">{application.letterType}</p>
+                            <p className="font-medium">{letterType?.name || 'N/A'}</p>
                         </div>
                          <div>
                             <p className="text-muted-foreground">Tanggal Pengajuan</p>
