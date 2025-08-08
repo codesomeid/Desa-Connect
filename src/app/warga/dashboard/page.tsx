@@ -3,7 +3,8 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { FilePlus } from 'lucide-react';
-import { applications, users, letterTypes, ApplicationStatus } from '@/lib/data';
+import { applications, users, letterTypes } from '@/lib/data';
+import type { ApplicationStatus } from '@/lib/data';
 import { Badge } from '@/components/ui/badge';
 import {
   Table,
@@ -81,7 +82,7 @@ export default async function WargaDashboardPage() {
           <CardTitle>Riwayat Permohonan Surat Anda</CardTitle>
           <CardDescription>
             Lacak status semua permohonan yang telah Anda ajukan.
-          </Description>
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="rounded-md border">
