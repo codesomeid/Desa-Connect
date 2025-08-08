@@ -33,10 +33,9 @@ export function MainLayout({ children }: { children: ReactNode }) {
         </SidebarContent>
         <SidebarFooter className="p-4">
           <Separator className="my-2 bg-sidebar-border" />
-          <Button variant="ghost" className="w-full justify-start" onClick={handleLogout}>
-            <LogOut />
-            <span>Keluar</span>
-          </Button>
+           <p className="p-2 text-xs text-muted-foreground">
+            © 2024 DesaConnect
+          </p>
         </SidebarFooter>
       </Sidebar>
       <SidebarInset>

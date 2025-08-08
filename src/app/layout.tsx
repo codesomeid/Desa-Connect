@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
-import { AuthLayout } from '@/components/layout/auth-layout';
+import { AdminLayout } from '@/components/layout/admin-layout';
 
 export const metadata: Metadata = {
   title: 'DesaConnect',
@@ -24,7 +24,7 @@ export default function RootLayout({
         />
       </head>
       <body className="font-body antialiased">
-        <AuthLayout>{children}</AuthLayout>
+        <AdminLayout>{children}</AdminLayout>
         <Toaster />
       </body>
     </html>
