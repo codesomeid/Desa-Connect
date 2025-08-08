@@ -1,4 +1,152 @@
-// This component is no longer used.
-export default function AddLetterTypeForm() {
-  return null;
+
+'use client';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { Button } from '@/components/ui/button';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from '@/components/ui/dialog';
+import { FilePlus, icons } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
+const formSchema = z.object({
+  name: z.string().min(5, { message: 'Nama surat minimal 5 karakter.' }),
+  description: z.string().min(10, { message: 'Deskripsi minimal 10 karakter.' }),
+  icon: z.string().min(1, { message: 'Ikon harus dipilih.' }),
+  template: z
+    .any()
+    .refine(files => files?.length === 1, 'Template PDF harus diunggah.')
+    .refine(files => files?.[0]?.type === 'application/pdf', 'File harus berupa PDF.'),
+});
+
+type IconName = keyof typeof icons;
+const iconNames = Object.keys(icons) as IconName[];
+
+interface AddLetterTypeFormProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (data: z.infer<typeof formSchema>) => void;
+}
+
+export function AddLetterTypeForm({ isOpen, onClose, onSubmit }: AddLetterTypeFormProps) {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: '',
+      description: '',
+      icon: '',
+      template: undefined,
+    },
+  });
+  
+  const templateRef = form.register("template");
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Tambah Jenis Surat Baru</DialogTitle>
+          <DialogDescription>
+            Isi detail di bawah ini untuk menambahkan jenis surat baru ke sistem.
+          </DialogDescription>
+        </DialogHeader>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nama Surat</FormLabel>
+                  <FormControl>
+                    <Input placeholder="cth. Surat Keterangan Domisili" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Deskripsi Singkat</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="Jelaskan kegunaan surat ini..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="icon"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Ikon Surat</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Pilih ikon yang sesuai..." />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {iconNames.map(iconName => (
+                        <SelectItem key={iconName} value={iconName}>
+                          {iconName}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+             <FormField
+                control={form.control}
+                name="template"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Template Surat (PDF)</FormLabel>
+                        <FormControl>
+                            <Input type="file" accept=".pdf" {...templateRef} />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button type="button" variant="secondary">
+                  Batal
+                </Button>
+              </DialogClose>
+              <Button type="submit">
+                <FilePlus className="mr-2 h-4 w-4" />
+                Simpan
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
+  );
 }

@@ -1,3 +1,4 @@
+
 "use client";
 
 import type { ReactNode } from "react";
@@ -14,34 +15,37 @@ export function MainLayout({ children }: { children: ReactNode }) {
 
   const handleLogout = () => {
     // In a real app, you would clear the session/token here
-    router.push('/login');
+    router.push('/');
   };
 
   return (
     <SidebarProvider>
       <Sidebar>
         <SidebarHeader className="p-4">
-          <div className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-3">
              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/20">
               <Leaf className="h-6 w-6 text-primary" />
             </div>
             <h1 className="text-xl font-semibold text-foreground">DesaConnect</h1>
-          </div>
+          </Link>
         </SidebarHeader>
-        <SidebarContent>
+        <SidebarContent className="p-2">
           <SidebarNav />
         </SidebarContent>
         <SidebarFooter className="p-4">
           <Separator className="my-2 bg-sidebar-border" />
-           <p className="p-2 text-xs text-muted-foreground">
-            © 2024 DesaConnect
-          </p>
+           <Button variant="ghost" className="w-full justify-start" onClick={handleLogout}>
+                <LogOut className="mr-2" />
+                Keluar
+           </Button>
         </SidebarFooter>
       </Sidebar>
       <SidebarInset>
         <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background/80 backdrop-blur-sm px-6 md:hidden">
           <SidebarTrigger />
-          <h1 className="text-lg font-semibold">DesaConnect</h1>
+          <Link href="/">
+            <h1 className="text-lg font-semibold">DesaConnect</h1>
+          </Link>
         </header>
         <main className="flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
       </SidebarInset>

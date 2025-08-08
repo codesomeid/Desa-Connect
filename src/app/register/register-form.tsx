@@ -1,3 +1,4 @@
+
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,6 +30,7 @@ import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   nik: z.string().length(16, { message: "NIK harus terdiri dari 16 digit." }),
+  name: z.string().min(3, { message: "Nama lengkap minimal 3 karakter." }),
   phoneNumber: z.string().min(10, { message: "Nomor telepon minimal 10 digit." }),
   email: z.string().email({ message: "Format email tidak valid." }),
   password: z.string().min(6, { message: "Password minimal 6 karakter." }),
@@ -43,6 +45,7 @@ export function RegisterForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       nik: "",
+      name: "",
       phoneNumber: "",
       email: "",
       password: "",
@@ -53,13 +56,13 @@ export function RegisterForm() {
     setIsLoading(true);
     // Simulate registration
     setTimeout(() => {
-      // In a real app, you would call your auth provider here.
-      console.log(values);
+      // In a real app, you would call your auth provider and create a user in the database.
+      console.log("New user registered:", values);
       toast({
         title: "Pendaftaran Berhasil",
         description: "Akun Anda telah berhasil dibuat. Silakan masuk.",
       });
-      router.push("/login");
+      router.push("/login/warga");
       setIsLoading(false);
     }, 1500);
   }
@@ -67,7 +70,7 @@ export function RegisterForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Daftar Akun</CardTitle>
+        <CardTitle>Daftar Akun Warga</CardTitle>
         <CardDescription>
           Isi data di bawah ini untuk membuat akun.
         </CardDescription>
@@ -83,6 +86,19 @@ export function RegisterForm() {
                   <FormLabel>Nomor Induk Kependudukan (NIK)</FormLabel>
                   <FormControl>
                     <Input placeholder="16 digit NIK" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nama Lengkap</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Nama sesuai KTP" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -129,7 +145,7 @@ export function RegisterForm() {
             />
             <Button
               type="submit"
-              className="w-full bg-accent hover:bg-accent/90"
+              className="w-full"
               disabled={isLoading}
             >
               {isLoading ? (
@@ -145,7 +161,7 @@ export function RegisterForm() {
       <CardFooter className="flex justify-center text-sm">
         <p>
           Sudah punya akun?{" "}
-          <Link href="/login" className="font-semibold text-accent hover:underline">
+          <Link href="/login/warga" className="font-semibold text-primary hover:underline">
             Masuk di sini
           </Link>
         </p>

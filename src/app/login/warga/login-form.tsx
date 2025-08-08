@@ -33,7 +33,7 @@ const formSchema = z.object({
   password: z.string().min(6, { message: "Password minimal 6 karakter." }),
 });
 
-export function AparaturLoginForm() {
+export function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
@@ -48,22 +48,22 @@ export function AparaturLoginForm() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    // Simulate admin login
+    // Simulate login
     setTimeout(() => {
       // In a real app, you would call your auth provider here.
-      if (values.email === "admin@desa.com" && values.password === "admin123") {
+      // We are mocking a successful login for any of the registered warga.
+      if (values.password === "warga123") {
         toast({
-          title: "Login Admin Berhasil",
-          description: "Selamat datang kembali, Admin!",
+          title: "Login Berhasil",
+          description: "Selamat datang kembali!",
         });
-        // In a real app, you'd get a token and save it.
-        // For now, we just redirect to an admin dashboard
-        router.push("/admin/dashboard");
+        // Redirect to the citizen dashboard after login.
+        router.push("/warga/dashboard");
       } else {
         toast({
           variant: "destructive",
           title: "Login Gagal",
-          description: "Email atau password salah.",
+          description: "Email atau password salah. Gunakan password 'warga123' untuk demo.",
         });
       }
       setIsLoading(false);
@@ -73,7 +73,7 @@ export function AparaturLoginForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Masuk Aparatur</CardTitle>
+        <CardTitle>Masuk Akun Warga</CardTitle>
         <CardDescription>
           Gunakan email dan password Anda untuk melanjutkan.
         </CardDescription>
@@ -88,7 +88,7 @@ export function AparaturLoginForm() {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="admin@desa.com" {...field} />
+                    <Input placeholder="cth. budi.s@example.com" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -101,7 +101,7 @@ export function AparaturLoginForm() {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="admin123" {...field} />
+                    <Input type="password" placeholder="warga123" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -122,8 +122,14 @@ export function AparaturLoginForm() {
           </form>
         </Form>
       </CardContent>
-       <CardFooter className="flex justify-center text-sm">
-        <Link href="/" className="font-semibold text-muted-foreground hover:underline text-xs">
+      <CardFooter className="flex flex-col gap-4 text-sm">
+        <p>
+          Belum punya akun?{" "}
+          <Link href="/register" className="font-semibold text-primary hover:underline">
+            Daftar di sini
+          </Link>
+        </p>
+         <Link href="/" className="font-semibold text-muted-foreground hover:underline text-xs">
             Kembali ke pemilihan peran
         </Link>
       </CardFooter>
