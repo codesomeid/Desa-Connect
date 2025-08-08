@@ -35,8 +35,11 @@ const formSchema = z.object({
   icon: z.string().min(1, { message: 'Ikon harus dipilih.' }),
   template: z
     .any()
-    .refine(files => files?.length === 1, 'Template PDF harus diunggah.')
-    .refine(files => files?.[0]?.type === 'application/pdf', 'File harus berupa PDF.'),
+    .refine(files => files?.length === 1, 'Template DOCX harus diunggah.')
+    .refine(
+      files => files?.[0]?.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'File harus berupa DOCX.'
+    ),
 });
 
 type IconName = keyof typeof icons;
@@ -141,9 +144,9 @@ export function AddLetterTypeForm({ isOpen, onClose, onSubmit }: AddLetterTypeFo
                 name="template"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Template Surat (PDF)</FormLabel>
+                        <FormLabel>Template Surat (DOCX)</FormLabel>
                         <FormControl>
-                            <Input type="file" accept=".pdf" {...templateRef} />
+                            <Input type="file" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" {...templateRef} />
                         </FormControl>
                         <FormMessage />
                     </FormItem>

@@ -24,24 +24,25 @@ export default function GenerateDraftButton({ application }: GenerateDraftButton
 
         // In a real application, you would:
         // 1. Call a server-side function/API endpoint.
-        // 2. This endpoint would fetch the PDF template (`template_path`).
-        // 3. It would use a library like `pdf-lib` to fill the form fields
-        //    with data from the application (e.g., pemohon.nama_lengkap, alasan_permohonan, etc.).
-        // 4. It would create a new `Surat_Keluar` entry in the database.
-        // 5. Return the filled PDF as a downloadable file (`file_final_path`).
+        // 2. This endpoint would fetch the .docx template (`template_path`).
+        // 3. It would use a library like `docx-templates` (Node.js) or `python-docx-template` (Python)
+        //    to fill the placeholders (e.g., {{nama_lengkap}}, {{nik}}) with the application data.
+        // 4. The filled .docx would be saved or converted to PDF.
+        // 5. It would create a new `Surat_Keluar` entry in the database.
+        // 6. Return the filled document as a downloadable file.
 
         // Here, we just simulate the process.
         setTimeout(() => {
             setIsLoading(false);
             toast({
                 title: 'Draf Siap Diunduh',
-                description: 'Draf surat PDF berhasil dibuat dan entri Surat Keluar telah dicatat.',
+                description: 'Draf surat berhasil dibuat dan entri Surat Keluar telah dicatat.',
             });
             // Simulate a file download. In a real app, this would be the actual file URL.
-            const fakePdfUrl = `/path/to/fake-draft-${application.id_permohonan}.pdf`;
+            const fakeDocxUrl = `/path/to/fake-draft-${application.id_permohonan}.docx`;
             const link = document.createElement('a');
-            link.href = fakePdfUrl;
-            link.setAttribute('download', `DRAF-${application.pemohon.nama_lengkap}.pdf`);
+            link.href = fakeDocxUrl;
+            link.setAttribute('download', `DRAF-${application.pemohon.nama_lengkap}.docx`);
             document.body.appendChild(link);
             link.click();
             link.remove();
@@ -61,7 +62,7 @@ export default function GenerateDraftButton({ application }: GenerateDraftButton
             ) : (
                 <FileDown className="mr-2 h-4 w-4" />
             )}
-            Buat & Unduh Draf (PDF)
+            Buat & Unduh Draf (DOCX)
         </Button>
     );
 }

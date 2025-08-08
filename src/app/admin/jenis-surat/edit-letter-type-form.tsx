@@ -35,7 +35,13 @@ const formSchema = z.object({
   deskripsi: z.string().min(10, { message: 'Deskripsi minimal 10 karakter.' }),
   kode_surat: z.string().min(1, { message: 'Kode surat tidak boleh kosong.' }),
   icon: z.string().min(1, { message: 'Ikon harus dipilih.' }),
-  template: z.any().optional(), // PDF template is optional on edit
+  template: z.any().optional().refine(
+    (files) =>
+      !files ||
+      files.length === 0 ||
+      files?.[0]?.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'File harus berupa DOCX.'
+  ),
 });
 
 type IconName = keyof typeof icons;
@@ -169,9 +175,9 @@ export function EditLetterTypeForm({ isOpen, onClose, onSubmit, letterType }: Ed
                 name="template"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Ubah Template (PDF)</FormLabel>
+                        <FormLabel>Ubah Template (DOCX)</FormLabel>
                         <FormControl>
-                            <Input type="file" accept=".pdf" {...templateRef} />
+                            <Input type="file" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" {...templateRef} />
                         </FormControl>
                         <FormMessage />
                         <p className="text-xs text-muted-foreground">
