@@ -27,12 +27,13 @@ import {
 } from '@/components/ui/dialog';
 import { Save, icons } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { LetterType } from '@/lib/data';
+import { JenisSurat } from '@/lib/data';
 
 const formSchema = z.object({
-  id: z.string(),
-  name: z.string().min(5, { message: 'Nama surat minimal 5 karakter.' }),
-  description: z.string().min(10, { message: 'Deskripsi minimal 10 karakter.' }),
+  id_jenis_surat: z.number(),
+  nama_surat: z.string().min(5, { message: 'Nama surat minimal 5 karakter.' }),
+  deskripsi: z.string().min(10, { message: 'Deskripsi minimal 10 karakter.' }),
+  kode_surat: z.string().min(1, { message: 'Kode surat tidak boleh kosong.' }),
   icon: z.string().min(1, { message: 'Ikon harus dipilih.' }),
   template: z.any().optional(), // PDF template is optional on edit
 });
@@ -43,45 +44,38 @@ const iconNames = Object.keys(icons) as IconName[];
 interface EditLetterTypeFormProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: LetterType) => void;
-  letterType: LetterType;
+  onSubmit: (data: JenisSurat) => void;
+  letterType: JenisSurat;
 }
 
 export function EditLetterTypeForm({ isOpen, onClose, onSubmit, letterType }: EditLetterTypeFormProps) {
   
   // This is a simplification. A real app would need a more robust mapping.
-  const getIconName = (icon: React.ReactNode): string | undefined => {
-    if (React.isValidElement(icon)) {
-      const iconType = (icon.type as any).displayName;
+  const getIconName = (letterTypeId: number): string => {
       // This is a weak mapping, but works for this controlled case.
-      const map: {[key:string]: string} = {
-          'Home': 'Home',
-          'FileText': 'FileText',
-          'FileUp': 'FileUp',
-          'Shield': 'Shield'
-      }
-      return map[iconType];
-    }
-    return undefined;
+      const iconCycle = ['Home', 'FileText', 'FileUp', 'Shield'];
+      return iconCycle[letterTypeId % iconCycle.length] || 'FileText';
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      id: letterType.id,
-      name: letterType.name,
-      description: letterType.description,
-      icon: getIconName(letterType.icon) || '',
+      id_jenis_surat: letterType.id_jenis_surat,
+      nama_surat: letterType.nama_surat,
+      deskripsi: letterType.deskripsi,
+      kode_surat: letterType.kode_surat,
+      icon: getIconName(letterType.id_jenis_surat),
       template: undefined,
     },
   });
   
   useEffect(() => {
     form.reset({
-      id: letterType.id,
-      name: letterType.name,
-      description: letterType.description,
-      icon: getIconName(letterType.icon) || '',
+      id_jenis_surat: letterType.id_jenis_surat,
+      nama_surat: letterType.nama_surat,
+      deskripsi: letterType.deskripsi,
+      kode_surat: letterType.kode_surat,
+      icon: getIconName(letterType.id_jenis_surat),
       template: undefined,
     });
   }, [letterType, form]);
@@ -89,11 +83,9 @@ export function EditLetterTypeForm({ isOpen, onClose, onSubmit, letterType }: Ed
   const templateRef = form.register("template");
 
   const handleFormSubmit = (values: z.infer<typeof formSchema>) => {
-    const IconComponent = icons[values.icon as IconName];
-    const submittedData: LetterType = {
+    const submittedData: JenisSurat = {
         ...values,
-        icon: <IconComponent className="h-6 w-6 text-accent" />,
-        templateUrl: values.template?.[0] ? URL.createObjectURL(values.template[0]) : letterType.templateUrl,
+        template_path: values.template?.[0] ? `/templates/${values.template[0].name}` : letterType.template_path,
     };
     onSubmit(submittedData);
   }
@@ -111,7 +103,7 @@ export function EditLetterTypeForm({ isOpen, onClose, onSubmit, letterType }: Ed
           <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-4">
             <FormField
               control={form.control}
-              name="name"
+              name="nama_surat"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Nama Surat</FormLabel>
@@ -124,7 +116,20 @@ export function EditLetterTypeForm({ isOpen, onClose, onSubmit, letterType }: Ed
             />
             <FormField
               control={form.control}
-              name="description"
+              name="kode_surat"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Kode Surat</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="deskripsi"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Deskripsi Singkat</FormLabel>

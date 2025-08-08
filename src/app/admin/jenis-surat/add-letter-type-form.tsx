@@ -26,10 +26,12 @@ import {
 } from '@/components/ui/dialog';
 import { FilePlus, icons } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { JenisSurat } from '@/lib/data';
 
 const formSchema = z.object({
-  name: z.string().min(5, { message: 'Nama surat minimal 5 karakter.' }),
-  description: z.string().min(10, { message: 'Deskripsi minimal 10 karakter.' }),
+  nama_surat: z.string().min(5, { message: 'Nama surat minimal 5 karakter.' }),
+  deskripsi: z.string().min(10, { message: 'Deskripsi minimal 10 karakter.' }),
+  kode_surat: z.string().min(1, { message: 'Kode surat tidak boleh kosong.' }),
   icon: z.string().min(1, { message: 'Ikon harus dipilih.' }),
   template: z
     .any()
@@ -43,15 +45,16 @@ const iconNames = Object.keys(icons) as IconName[];
 interface AddLetterTypeFormProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: z.infer<typeof formSchema>) => void;
+  onSubmit: (data: any) => void;
 }
 
 export function AddLetterTypeForm({ isOpen, onClose, onSubmit }: AddLetterTypeFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: '',
-      description: '',
+      nama_surat: '',
+      deskripsi: '',
+      kode_surat: '',
       icon: '',
       template: undefined,
     },
@@ -72,7 +75,7 @@ export function AddLetterTypeForm({ isOpen, onClose, onSubmit }: AddLetterTypeFo
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
-              name="name"
+              name="nama_surat"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Nama Surat</FormLabel>
@@ -83,9 +86,22 @@ export function AddLetterTypeForm({ isOpen, onClose, onSubmit }: AddLetterTypeFo
                 </FormItem>
               )}
             />
+             <FormField
+              control={form.control}
+              name="kode_surat"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Kode Surat</FormLabel>
+                  <FormControl>
+                    <Input placeholder="cth. 474.1" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
-              name="description"
+              name="deskripsi"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Deskripsi Singkat</FormLabel>

@@ -4,8 +4,8 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { MoreHorizontal, PlusCircle, Search } from 'lucide-react';
-import { letterTypes as initialLetterTypes, LetterType } from '@/lib/data';
+import { MoreHorizontal, PlusCircle, Search, FileUp, Home, FileText, Shield, icons } from 'lucide-react';
+import { letterTypes as initialLetterTypes, JenisSurat } from '@/lib/data';
 import { AddLetterTypeForm } from './add-letter-type-form';
 import { EditLetterTypeForm } from './edit-letter-type-form';
 import {
@@ -23,50 +23,65 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
+// Helper to map icon names to components
+const iconMap: { [key: string]: React.ComponentType<any> } = {
+  Home,
+  FileText,
+  FileUp,
+  Shield,
+  // Add other icons from lucide-react as needed
+  ...icons
+};
+
+
+const getIconComponent = (letterTypeId: number) => {
+    // This is a placeholder logic to associate an icon with a letter type
+    const icons = [<Home className="h-6 w-6 text-accent" />, <FileText className="h-6 w-6 text-accent" />, <FileUp className="h-6 w-6 text-accent" />, <Shield className="h-6 w-6 text-accent" />];
+    return icons[letterTypeId % icons.length] || <FileText className="h-6 w-6 text-accent" />;
+};
+
+
 export default function LetterTypeManagementPage() {
-  const [letterTypes, setLetterTypes] = useState<LetterType[]>(initialLetterTypes);
+  const [letterTypes, setLetterTypes] = useState<JenisSurat[]>(initialLetterTypes);
   const [showAddForm, setShowAddForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
-  const [selectedLetter, setSelectedLetter] = useState<LetterType | null>(null);
+  const [selectedLetter, setSelectedLetter] = useState<JenisSurat | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const handleAddLetter = (newLetter: Omit<LetterType, 'id' | 'icon'> & { icon: string }) => {
-    // In a real app, this would involve a database call.
-    const createdLetter: LetterType = {
-      ...newLetter,
-      id: (letterTypes.length + 1).toString(),
-      // The icon handling needs to be resolved to a component
-      // This is a placeholder
-      icon: <FilePlus className="h-6 w-6 text-accent" />,
+  const handleAddLetter = (data: Omit<JenisSurat, 'id_jenis_surat' | 'template_path'> & { icon: string; template: FileList }) => {
+    // In a real app, this would involve a database call and file upload.
+    const newLetter: JenisSurat = {
+      ...data,
+      id_jenis_surat: letterTypes.length + 1,
+      template_path: `/templates/${data.template[0].name}`, // Simulate file path
     };
-    setLetterTypes(prev => [...prev, createdLetter]);
+    setLetterTypes(prev => [...prev, newLetter]);
     setShowAddForm(false);
   };
 
-  const handleEditLetter = (updatedLetter: LetterType) => {
+  const handleEditLetter = (updatedLetter: JenisSurat) => {
     setLetterTypes(prev =>
-      prev.map(lt => (lt.id === updatedLetter.id ? updatedLetter : lt))
+      prev.map(lt => (lt.id_jenis_surat === updatedLetter.id_jenis_surat ? updatedLetter : lt))
     );
     setShowEditForm(false);
     setSelectedLetter(null);
   };
 
-  const handleDeleteLetter = (letterId: string) => {
-     setLetterTypes(prev => prev.filter(lt => lt.id !== letterId));
+  const handleDeleteLetter = (letterId: number) => {
+     setLetterTypes(prev => prev.filter(lt => lt.id_jenis_surat !== letterId));
   };
   
-  const openEditDialog = (letter: LetterType) => {
+  const openEditDialog = (letter: JenisSurat) => {
     setSelectedLetter(letter);
     setShowEditForm(true);
   };
 
   const filteredLetterTypes = letterTypes.filter(lt =>
-    lt.name.toLowerCase().includes(searchTerm.toLowerCase())
+    lt.nama_surat.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -104,13 +119,13 @@ export default function LetterTypeManagementPage() {
           <ScrollArea className="h-96 pr-4">
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {filteredLetterTypes.map(letter => (
-                <Card key={letter.id} className="flex flex-col">
+                <Card key={letter.id_jenis_surat} className="flex flex-col">
                   <CardHeader className="flex-row items-start gap-4 space-y-0">
                     <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                      {letter.icon}
+                      {getIconComponent(letter.id_jenis_surat)}
                     </div>
                     <div className="flex-1">
-                      <CardTitle className="text-base">{letter.name}</CardTitle>
+                      <CardTitle className="text-base">{letter.nama_surat}</CardTitle>
                     </div>
                      <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -137,7 +152,7 @@ export default function LetterTypeManagementPage() {
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                               <AlertDialogCancel>Batal</AlertDialogCancel>
-                              <AlertDialogAction onClick={() => handleDeleteLetter(letter.id)}>
+                              <AlertDialogAction onClick={() => handleDeleteLetter(letter.id_jenis_surat)}>
                                 Ya, Hapus
                               </AlertDialogAction>
                             </AlertDialogFooter>
@@ -148,7 +163,7 @@ export default function LetterTypeManagementPage() {
                   </CardHeader>
                   <CardContent className="flex-1">
                     <p className="text-sm text-muted-foreground">
-                      {letter.description}
+                      {letter.deskripsi}
                     </p>
                   </CardContent>
                 </Card>
