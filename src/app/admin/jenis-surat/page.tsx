@@ -28,6 +28,8 @@ import {
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
+import { TemplatePreviewDialog } from './template-preview-dialog';
+
 
 // Helper to map icon names to components
 const iconMap: { [key: string]: React.ComponentType<any> } = {
@@ -50,6 +52,7 @@ export default function LetterTypeManagementPage() {
   const [letterTypes, setLetterTypes] = useState<JenisSurat[]>(initialLetterTypes);
   const [showAddForm, setShowAddForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
   const [selectedLetter, setSelectedLetter] = useState<JenisSurat | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const { toast } = useToast();
@@ -86,16 +89,15 @@ export default function LetterTypeManagementPage() {
     setShowEditForm(true);
   };
   
+  const openPreviewDialog = (letter: JenisSurat) => {
+    setSelectedLetter(letter);
+    setShowPreview(true);
+  };
+  
   const handleTemplateAction = (letter: JenisSurat) => {
     if (letter.template_path) {
-      // Simulate preview/download
-       toast({
-        title: 'Membuka Pratinjau',
-        description: `Mengunduh template untuk "${letter.nama_surat}"...`,
-      });
-      // In a real app, you would trigger a download here, e.g., window.open(letter.template_path)
+      openPreviewDialog(letter);
     } else {
-      // Open edit form to add template
       openEditDialog(letter);
     }
   }
@@ -240,6 +242,17 @@ export default function LetterTypeManagementPage() {
           }}
           onSubmit={handleEditLetter}
           letterType={selectedLetter}
+        />
+      )}
+      
+      {showPreview && selectedLetter && (
+        <TemplatePreviewDialog
+            isOpen={showPreview}
+            onClose={() => {
+                setShowPreview(false);
+                setSelectedLetter(null);
+            }}
+            letterType={selectedLetter}
         />
       )}
     </div>
