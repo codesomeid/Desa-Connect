@@ -79,7 +79,7 @@ export const letterTypes: JenisSurat[] = [
     { id_jenis_surat: 1, kode_surat: "474.1", nama_surat: "Surat Keterangan Domisili", deskripsi: "Untuk keperluan administrasi perbankan, pekerjaan, dll.", template_path: "/templates/surat_domisili.docx" },
     { id_jenis_surat: 2, kode_surat: "474.2", nama_surat: "Surat Pengantar Nikah", deskripsi: "Sebagai salah satu syarat pengurusan pernikahan di KUA.", template_path: "/templates/surat_nikah.docx" },
     { id_jenis_surat: 3, kode_surat: "503", nama_surat: "Surat Keterangan Usaha", deskripsi: "Untuk mengajukan pinjaman atau izin terkait usaha.", template_path: "/templates/surat_usaha.docx" },
-    { id_jenis_surat: 4, kode_surat: "300", nama_surat: "Surat Pengantar SKCK", deskripsi: "Untuk pembuatan Surat Keterangan Catatan Kepolisian.", template_path: "/templates/surat_skck.docx" }
+    { id_jenis_surat: 4, kode_surat: "300", nama_surat: "Surat Pengantar SKCK", deskripsi: "Untuk pembuatan Surat Keterangan Catatan Kepolisian.", template_path: "" }
 ];
 
 // APARAT_DESA Table
