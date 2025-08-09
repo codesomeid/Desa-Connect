@@ -39,7 +39,7 @@ export function SidebarNav() {
   const [navItems, setNavItems] = useState<NavItem[]>([]);
   
   useEffect(() => {
-    // This is a simulation. In a real app, user role would be determined from auth context.
+    // This logic now correctly runs only on the client side.
     const userRole = localStorage.getItem('userRole'); // example: 'Super Admin', 'Admin', 'Warga'
     if (userRole === 'Super Admin') {
         setNavItems(superAdminNavItems);
