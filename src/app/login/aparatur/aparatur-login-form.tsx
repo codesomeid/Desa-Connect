@@ -22,7 +22,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Loader2, LogIn } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
@@ -38,6 +38,11 @@ export function AparaturLoginForm() {
   const { toast } = useToast();
   const router = useRouter();
 
+  useEffect(() => {
+    // Clear role on component mount to ensure clean state
+    localStorage.removeItem('userRole');
+  }, []);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -51,13 +56,19 @@ export function AparaturLoginForm() {
     // Simulate admin login
     setTimeout(() => {
       // In a real app, you would call your auth provider here.
-      if (values.email === "admin@desa.com" && values.password === "admin123") {
+      if (values.email === "superadmin@desa.com" && values.password === "superadmin123") {
+        toast({
+          title: "Login Super Admin Berhasil",
+          description: "Selamat datang, Super Admin!",
+        });
+        localStorage.setItem('userRole', 'Super Admin');
+        router.push("/admin/dashboard");
+      } else if (values.email === "admin@desa.com" && values.password === "admin123") {
         toast({
           title: "Login Admin Berhasil",
           description: "Selamat datang kembali, Admin!",
         });
-        // In a real app, you'd get a token and save it.
-        // For now, we just redirect to an admin dashboard
+        localStorage.setItem('userRole', 'Admin');
         router.push("/admin/dashboard");
       } else {
         toast({
@@ -65,6 +76,7 @@ export function AparaturLoginForm() {
           title: "Login Gagal",
           description: "Email atau password salah.",
         });
+        localStorage.removeItem('userRole');
       }
       setIsLoading(false);
     }, 1500);
@@ -101,7 +113,7 @@ export function AparaturLoginForm() {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="admin123" {...field} />
+                    <Input type="password" placeholder="******" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

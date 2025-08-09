@@ -22,7 +22,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Loader2, LogIn } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
@@ -37,6 +37,11 @@ export function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
+
+  useEffect(() => {
+    // Clear role on component mount to ensure clean state
+    localStorage.removeItem('userRole');
+  }, []);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -57,6 +62,8 @@ export function LoginForm() {
           title: "Login Berhasil",
           description: "Selamat datang kembali!",
         });
+        // Set role for navigation
+        localStorage.setItem('userRole', 'Warga');
         // Redirect to the citizen dashboard after login.
         router.push("/warga/dashboard");
       } else {
@@ -65,6 +72,7 @@ export function LoginForm() {
           title: "Login Gagal",
           description: "Email atau password salah. Gunakan password 'warga123' untuk demo.",
         });
+        localStorage.removeItem('userRole');
       }
       setIsLoading(false);
     }, 1500);

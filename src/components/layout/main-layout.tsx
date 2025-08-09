@@ -15,6 +15,7 @@ export function MainLayout({ children }: { children: ReactNode }) {
 
   const handleLogout = () => {
     // In a real app, you would clear the session/token here
+    localStorage.removeItem('userRole');
     router.push('/');
   };
 

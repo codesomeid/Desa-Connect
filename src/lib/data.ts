@@ -4,7 +4,7 @@
 // --- ENUMS & TYPES ---
 
 export type ApplicationStatus = 'Diajukan' | 'Diverifikasi' | 'Diproses' | 'Ditolak' | 'Siap Diambil' | 'Selesai';
-export type AparatJabatan = 'Admin' | 'Sekretaris' | 'Kepala Desa';
+export type AparatJabatan = 'Admin' | 'Sekretaris' | 'Kepala Desa' | 'Super Admin';
 export type MetodeCetak = 'Full Print' | 'TTD Basah' | 'Nomor Basah';
 
 // --- INTERFACES / TABLE DEFINITIONS ---
@@ -76,17 +76,18 @@ export const users: Masyarakat[] = [
 
 // JENIS_SURAT Table
 export const letterTypes: JenisSurat[] = [
-    { id_jenis_surat: 1, kode_surat: "474.1", nama_surat: "Surat Keterangan Domisili", deskripsi: "Untuk keperluan administrasi perbankan, pekerjaan, dll.", template_path: "/templates/surat_domisili.pdf" },
-    { id_jenis_surat: 2, kode_surat: "474.2", nama_surat: "Surat Pengantar Nikah", deskripsi: "Sebagai salah satu syarat pengurusan pernikahan di KUA.", template_path: "/templates/surat_nikah.pdf" },
-    { id_jenis_surat: 3, kode_surat: "503", nama_surat: "Surat Keterangan Usaha", deskripsi: "Untuk mengajukan pinjaman atau izin terkait usaha.", template_path: "/templates/surat_usaha.pdf" },
-    { id_jenis_surat: 4, kode_surat: "300", nama_surat: "Surat Pengantar SKCK", deskripsi: "Untuk pembuatan Surat Keterangan Catatan Kepolisian.", template_path: "/templates/surat_skck.pdf" }
+    { id_jenis_surat: 1, kode_surat: "474.1", nama_surat: "Surat Keterangan Domisili", deskripsi: "Untuk keperluan administrasi perbankan, pekerjaan, dll.", template_path: "/templates/surat_domisili.docx" },
+    { id_jenis_surat: 2, kode_surat: "474.2", nama_surat: "Surat Pengantar Nikah", deskripsi: "Sebagai salah satu syarat pengurusan pernikahan di KUA.", template_path: "/templates/surat_nikah.docx" },
+    { id_jenis_surat: 3, kode_surat: "503", nama_surat: "Surat Keterangan Usaha", deskripsi: "Untuk mengajukan pinjaman atau izin terkait usaha.", template_path: "/templates/surat_usaha.docx" },
+    { id_jenis_surat: 4, kode_surat: "300", nama_surat: "Surat Pengantar SKCK", deskripsi: "Untuk pembuatan Surat Keterangan Catatan Kepolisian.", template_path: "/templates/surat_skck.docx" }
 ];
 
 // APARAT_DESA Table
 export const aparatur: AparatDesa[] = [
-  { id_aparat: 1, nip: '198001012010011001', nama_lengkap: 'Admin Desa', jabatan: 'Admin', username: 'admin', password_hash: 'hashed_password_admin' },
+  { id_aparat: 1, nip: '198001012010011001', nama_lengkap: 'Admin Desa', jabatan: 'Admin', username: 'admin@desa.com', password_hash: 'hashed_password_admin' },
   { id_aparat: 2, nip: '198502022012022002', nama_lengkap: 'Sekretaris Desa', jabatan: 'Sekretaris', username: 'sekdes', password_hash: 'hashed_password_sekdes' },
   { id_aparat: 3, nip: '197503032008031003', nama_lengkap: 'Kepala Desa', jabatan: 'Kepala Desa', username: 'kades', password_hash: 'hashed_password_kades' },
+  { id_aparat: 4, nip: '000000000000000000', nama_lengkap: 'Super Admin', jabatan: 'Super Admin', username: 'superadmin@desa.com', password_hash: 'hashed_password_superadmin' },
 ];
 
 // PERMOHONAN_SURAT Table
