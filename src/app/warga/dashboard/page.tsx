@@ -108,8 +108,7 @@ export default async function WargaDashboardPage() {
                       </TableCell>
                       <TableCell className="text-right">
                          <Button variant="outline" size="sm" asChild>
-                            {/* In a real app, this would link to a detail page */}
-                            <Link href="#">Lihat Detail</Link>
+                            <Link href={`/warga/permohonan/${app.id_permohonan}`}>Lihat Detail</Link>
                          </Button>
                       </TableCell>
                     </TableRow>
