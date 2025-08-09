@@ -1,6 +1,6 @@
 
 import Link from 'next/link';
-import { ArrowLeft, FileText, User, Calendar, Info } from 'lucide-react';
+import { ArrowLeft, FileText, User, Calendar, Info, PlayCircle } from 'lucide-react';
 import { applications, users, letterTypes, ApplicationStatus, aparatur, suratKeluar } from '@/lib/data';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { notFound } from 'next/navigation';
 import { Separator } from '@/components/ui/separator';
 import StatusUpdater from './status-updater';
-import GenerateDraftButton from './generate-draft-button';
+import ProcessApplicationButton from './process-application-button';
 
 const statusVariantMap: { [key in ApplicationStatus]: "default" | "secondary" | "destructive" | "outline" } = {
   'Diajukan': 'secondary',
@@ -56,6 +56,8 @@ export default async function ApplicationDetailPage({ params }: { params: { id: 
   if (!application) {
     notFound();
   }
+  
+  const canBeProcessed = application.status === 'Diverifikasi' || application.status === 'Diproses';
 
   return (
     <main className="space-y-8">
@@ -132,8 +134,8 @@ export default async function ApplicationDetailPage({ params }: { params: { id: 
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <StatusUpdater currentStatus={application.status} applicationId={application.id_permohonan} />
-                    <Separator />
-                    <GenerateDraftButton application={application} />
+                    {canBeProcessed && <Separator />}
+                    {canBeProcessed && <ProcessApplicationButton application={application} />}
                 </CardContent>
             </Card>
 
