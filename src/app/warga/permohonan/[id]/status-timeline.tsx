@@ -23,7 +23,7 @@ const statusConfigMap: Record<ApplicationStatus | 'Ditolak', StatusConfig> = {
   Diajukan: { icon: FileClock, color: 'text-blue-500', label: 'Permohonan Diajukan' },
   Diverifikasi: { icon: CheckCircle, color: 'text-blue-500', label: 'Permohonan Diverifikasi' },
   Diproses: { icon: Loader, color: 'text-blue-500', label: 'Sedang Diproses' },
-  Siap Diambil: { icon: FileCheck, color: 'text-green-500', label: 'Siap Diambil' },
+  'Siap Diambil': { icon: FileCheck, color: 'text-green-500', label: 'Siap Diambil' },
   Selesai: { icon: CheckCircle, color: 'text-green-500', label: 'Selesai' },
   Ditolak: { icon: XCircle, color: 'text-red-500', label: 'Permohonan Ditolak' },
 };
@@ -67,7 +67,7 @@ export function StatusTimeline({ currentStatus }: { currentStatus: ApplicationSt
                   <config.icon
                     className={cn(
                       'h-5 w-5',
-                       isActive ? 'animate-spin' : 'text-muted-foreground'
+                       isActive && status === 'Diproses' ? 'animate-spin' : 'text-muted-foreground'
                     )}
                   />
                 )}
