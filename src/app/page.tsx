@@ -61,7 +61,7 @@ export default function RoleSelectionPage() {
             </CardHeader>
             <CardContent>
               <Button asChild variant="outline" className="w-full">
-                <Link href="/login/aparatur">Masuk sebagai Super Admin</Link>
+                <Link href="/login/superadmin">Masuk sebagai Super Admin</Link>
               </Button>
             </CardContent>
           </Card>
