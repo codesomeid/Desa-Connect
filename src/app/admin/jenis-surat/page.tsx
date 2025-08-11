@@ -42,7 +42,8 @@ const iconMap: { [key: string]: React.ComponentType<any> } = {
 };
 
 
-const getIconComponent = (iconName: string) => {
+const getIconComponent = (iconName?: string) => {
+    if (!iconName) return <FileText className="h-6 w-6 text-accent" />;
     const Icon = iconMap[iconName];
     return Icon ? <Icon className="h-6 w-6 text-accent" /> : <FileText className="h-6 w-6 text-accent" />;
 };
@@ -102,17 +103,6 @@ export default function LetterTypeManagementPage() {
     }
   }
 
-  const getIconNameFromLetter = (letter: JenisSurat) => {
-    // This is a placeholder logic to associate an icon with a letter type
-    // In a real app, you should probably store the icon name in the database.
-    const iconCycle = ['Home', 'FileText', 'FileUp', 'Shield'];
-    const iconName = iconCycle[letter.id_jenis_surat % iconCycle.length] || 'FileText';
-
-    // A check to see if we already have an icon prop, which is more reliable
-    const existingIcon = (letter as any).icon
-    return existingIcon || iconName
-  }
-
   const filteredLetterTypes = letterTypes.filter(lt =>
     lt.nama_surat.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -156,7 +146,7 @@ export default function LetterTypeManagementPage() {
                   <div>
                     <CardHeader className="flex-row items-start gap-4 space-y-0">
                       <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                        {getIconComponent(getIconNameFromLetter(letter))}
+                        {getIconComponent(letter.icon)}
                       </div>
                       <div className="flex-1">
                         <CardTitle className="text-base">{letter.nama_surat}</CardTitle>

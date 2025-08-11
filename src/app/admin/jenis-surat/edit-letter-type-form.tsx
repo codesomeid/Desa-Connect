@@ -56,13 +56,6 @@ interface EditLetterTypeFormProps {
 
 export function EditLetterTypeForm({ isOpen, onClose, onSubmit, letterType }: EditLetterTypeFormProps) {
   
-  // This is a simplification. A real app would need a more robust mapping.
-  const getIconName = (letterTypeId: number): string => {
-      // This is a weak mapping, but works for this controlled case.
-      const iconCycle = ['Home', 'FileText', 'FileUp', 'Shield'];
-      return iconCycle[letterTypeId % iconCycle.length] || 'FileText';
-  };
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -70,7 +63,7 @@ export function EditLetterTypeForm({ isOpen, onClose, onSubmit, letterType }: Ed
       nama_surat: letterType.nama_surat,
       deskripsi: letterType.deskripsi,
       kode_surat: letterType.kode_surat,
-      icon: getIconName(letterType.id_jenis_surat),
+      icon: letterType.icon || 'FileText',
       template: undefined,
     },
   });
@@ -81,7 +74,7 @@ export function EditLetterTypeForm({ isOpen, onClose, onSubmit, letterType }: Ed
       nama_surat: letterType.nama_surat,
       deskripsi: letterType.deskripsi,
       kode_surat: letterType.kode_surat,
-      icon: getIconName(letterType.id_jenis_surat),
+      icon: letterType.icon || 'FileText',
       template: undefined,
     });
   }, [letterType, form]);

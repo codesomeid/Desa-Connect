@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Users, Shield } from 'lucide-react';
+import { Users, Shield, UserCog } from 'lucide-react';
 
 export default function RoleSelectionPage() {
   return (
@@ -46,6 +46,22 @@ export default function RoleSelectionPage() {
             <CardContent>
               <Button asChild variant="secondary" className="w-full">
                 <Link href="/login/aparatur">Masuk sebagai Aparat</Link>
+              </Button>
+            </CardContent>
+          </Card>
+           <Card className="border-primary/50">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <UserCog className="h-6 w-6 text-primary" />
+                <span className="text-primary">Super Admin</span>
+              </CardTitle>
+              <CardDescription>
+                Masuk dengan akses penuh ke semua fitur untuk pengujian dan administrasi.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button asChild variant="outline" className="w-full">
+                <Link href="/login/aparatur">Masuk sebagai Super Admin</Link>
               </Button>
             </CardContent>
           </Card>

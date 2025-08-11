@@ -25,6 +25,7 @@ export interface JenisSurat {
   nama_surat: string;
   deskripsi: string;
   template_path: string; // Path to a .docx or .pdf template
+  icon?: string;
 }
 
 export interface AparatDesa {
@@ -76,10 +77,10 @@ export const users: Masyarakat[] = [
 
 // JENIS_SURAT Table
 export const letterTypes: JenisSurat[] = [
-    { id_jenis_surat: 1, kode_surat: "474.1", nama_surat: "Surat Keterangan Domisili", deskripsi: "Untuk keperluan administrasi perbankan, pekerjaan, dll.", template_path: "/templates/surat_domisili.docx" },
-    { id_jenis_surat: 2, kode_surat: "474.2", nama_surat: "Surat Pengantar Nikah", deskripsi: "Sebagai salah satu syarat pengurusan pernikahan di KUA.", template_path: "/templates/surat_nikah.docx" },
-    { id_jenis_surat: 3, kode_surat: "503", nama_surat: "Surat Keterangan Usaha", deskripsi: "Untuk mengajukan pinjaman atau izin terkait usaha.", template_path: "/templates/surat_usaha.docx" },
-    { id_jenis_surat: 4, kode_surat: "300", nama_surat: "Surat Pengantar SKCK", deskripsi: "Untuk pembuatan Surat Keterangan Catatan Kepolisian.", template_path: "" }
+    { id_jenis_surat: 1, kode_surat: "474.1", nama_surat: "Surat Keterangan Domisili", deskripsi: "Untuk keperluan administrasi perbankan, pekerjaan, dll.", template_path: "/templates/surat_domisili.docx", icon: 'Home' },
+    { id_jenis_surat: 2, kode_surat: "474.2", nama_surat: "Surat Pengantar Nikah", deskripsi: "Sebagai salah satu syarat pengurusan pernikahan di KUA.", template_path: "/templates/surat_nikah.docx", icon: 'FileText' },
+    { id_jenis_surat: 3, kode_surat: "503", nama_surat: "Surat Keterangan Usaha", deskripsi: "Untuk mengajukan pinjaman atau izin terkait usaha.", template_path: "/templates/surat_usaha.docx", icon: 'FileUp' },
+    { id_jenis_surat: 4, kode_surat: "300", nama_surat: "Surat Pengantar SKCK", deskripsi: "Untuk pembuatan Surat Keterangan Catatan Kepolisian.", template_path: "", icon: 'Shield' }
 ];
 
 // APARAT_DESA Table
