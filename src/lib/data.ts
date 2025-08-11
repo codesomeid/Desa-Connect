@@ -86,8 +86,8 @@ export const letterTypes: JenisSurat[] = [
 // APARAT_DESA Table
 export const aparatur: AparatDesa[] = [
   { id_aparat: 1, nip: '198001012010011001', nama_lengkap: 'Admin Desa', jabatan: 'Admin', username: 'admin@desa.com', password_hash: 'hashed_password_admin' },
-  { id_aparat: 2, nip: '198502022012022002', nama_lengkap: 'Sekretaris Desa', jabatan: 'Sekretaris', username: 'sekdes', password_hash: 'hashed_password_sekdes' },
-  { id_aparat: 3, nip: '197503032008031003', nama_lengkap: 'Kepala Desa', jabatan: 'Kepala Desa', username: 'kades', password_hash: 'hashed_password_kades' },
+  { id_aparat: 2, nip: '198502022012022002', nama_lengkap: 'Sekretaris Desa', jabatan: 'Sekretaris', username: 'sekdes@desa.com', password_hash: 'hashed_password_sekdes' },
+  { id_aparat: 3, nip: '197503032008031003', nama_lengkap: 'Kepala Desa', jabatan: 'Kepala Desa', username: 'kades@desa.com', password_hash: 'hashed_password_kades' },
   { id_aparat: 4, nip: '000000000000000000', nama_lengkap: 'Super Admin', jabatan: 'Super Admin', username: 'superadmin@desa.com', password_hash: 'hashed_password_superadmin' },
 ];
 
@@ -97,6 +97,7 @@ export const applications: PermohonanSurat[] = [
   { id_permohonan: 2, id_masyarakat: 2, id_jenis_surat: 3, tanggal_permohonan: new Date(2024, 4, 3, 14, 0).toISOString(), alasan_permohonan: 'Sebagai syarat untuk mengajukan Kredit Usaha Rakyat (KUR) untuk pengembangan warung kelontong saya.', status: 'Diproses' },
   { id_permohonan: 3, id_masyarakat: 3, id_jenis_surat: 4, tanggal_permohonan: new Date(2024, 4, 4, 16, 0).toISOString(), alasan_permohonan: 'Dibutuhkan untuk melamar pekerjaan sebagai satpam di PT. Aman Sentosa.', status: 'Diajukan' },
   { id_permohonan: 4, id_masyarakat: 1, id_jenis_surat: 2, tanggal_permohonan: new Date(2024, 3, 20).toISOString(), alasan_permohonan: 'Untuk menikah.', status: 'Ditolak', catatan_admin: 'Data wali nikah tidak lengkap. Mohon perbarui dan ajukan kembali.' },
+   { id_permohonan: 5, id_masyarakat: 1, id_jenis_surat: 3, tanggal_permohonan: new Date(2024, 4, 5, 9, 0).toISOString(), alasan_permohonan: 'Butuh surat keterangan usaha untuk pinjaman modal.', status: 'Diproses' },
 ];
 
 // SURAT_KELUAR Table

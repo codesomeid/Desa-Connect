@@ -3,13 +3,14 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { LayoutDashboard, FileText, FilePlus, Users, Combine } from "lucide-react";
+import { LayoutDashboard, FileText, FilePlus, Users, Combine, PenSquare } from "lucide-react";
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
 import { useState, useEffect } from "react";
 
 const adminNavItems = [
     { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { href: "/admin/permohonan", label: "Manajemen Permohonan", icon: FileText },
+    { href: "/admin/sekretaris", label: "Persetujuan Sekretaris", icon: PenSquare },
     { href: "/admin/jenis-surat", label: "Manajemen Surat", icon: FilePlus },
     { href: "/admin/users", label: "Manajemen Pengguna", icon: Users },
 ]
@@ -22,6 +23,7 @@ const wargaNavItems = [
 const superAdminNavItems = [
     { href: "/admin/dashboard", label: "Admin Dashboard", icon: LayoutDashboard },
     { href: "/admin/permohonan", label: "Manajemen Permohonan", icon: FileText },
+    { href: "/admin/sekretaris", label: "Persetujuan Sekretaris", icon: PenSquare },
     { href: "/admin/jenis-surat", label: "Manajemen Surat", icon: FilePlus },
     { href: "/admin/users", label: "Manajemen Pengguna", icon: Users },
     { href: "/warga/dashboard", label: "Warga Dashboard", icon: Combine },
@@ -64,7 +66,7 @@ export function SidebarNav() {
         <SidebarMenuItem key={item.href}>
           <SidebarMenuButton 
             asChild
-            isActive={pathname === item.href || (pathname.startsWith(item.href) && item.href !== '/admin/dashboard' && item.href !== '/warga/dashboard')}
+            isActive={pathname.startsWith(item.href)}
             className="font-medium"
             tooltip={{ children: item.label }}
           >
