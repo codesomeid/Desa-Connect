@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowLeft, FileText, User, Calendar, Printer, Signature, Check, Loader2 } from 'lucide-react';
+import { ArrowLeft, FileText, User, Calendar, Printer, Signature, Check, Loader2, Info } from 'lucide-react';
 import { applications, users, letterTypes, aparatur, MetodeCetak, AparatJabatan } from '@/lib/data';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -15,6 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 // This function simulates fetching data from a database.
 // In a real app, this would be a proper async function fetching from an API.
@@ -182,17 +183,41 @@ export default function FinalizeApplicationPage({ params }: { params: { id: stri
                               </Select>
                         </div>
                       </div>
-
-                      <Separator />
-
-                      <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
-                         {isLoading ? (
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          ) : (
-                            showDigitalFields ? <Check className="mr-2"/> : <Printer className="mr-2"/>
-                          )}
-                        {showDigitalFields ? 'Selesaikan & Siap Diambil' : 'Finalisasi & Cetak'}
-                      </Button>
+                      
+                      {showDigitalFields ? (
+                          <>
+                           <Separator />
+                            <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
+                                {isLoading ? (
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                ) : (
+                                    <Check className="mr-2"/>
+                                )}
+                                Selesaikan & Siap Diambil
+                            </Button>
+                          </>
+                      ) : (
+                        <Alert>
+                          <Info className="h-4 w-4" />
+                          <AlertTitle>Langkah Berikutnya</AlertTitle>
+                          <AlertDescription className="space-y-4">
+                            <p>
+                                Cetak dokumen ini untuk proses penomoran dan tanda tangan basah.
+                            </p>
+                            <Button type="button" className="w-full" size="lg" disabled={isLoading} variant="secondary">
+                                 {isLoading ? (
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                  ) : (
+                                    <Printer className="mr-2"/>
+                                  )}
+                                Cetak untuk TTD & Penomoran
+                            </Button>
+                            <p className="text-xs text-muted-foreground pt-2">
+                                Setelah surat selesai, unggah kembali pindaian/foto dokumen di halaman ini untuk menyelesaikan proses dan mengarsipkannya.
+                            </p>
+                          </AlertDescription>
+                        </Alert>
+                      )}
                   </form>
                 </CardContent>
             </Card>
