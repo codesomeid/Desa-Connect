@@ -14,6 +14,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { useState, useEffect } from 'react';
+import { cn } from '@/lib/utils';
 
 // This function simulates fetching data from a database.
 // In a real app, this would be a proper async function fetching from an API.
@@ -42,6 +43,7 @@ export default function FinalizeApplicationPage({ params }: { params: { id: stri
   const router = useRouter();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const [printMethod, setPrintMethod] = useState<MetodeCetak>('Full Print');
   
   // Since this is a client component, we fetch data in useEffect or use a library like SWR/React Query
   // For this mock, we'll just call it directly.
@@ -68,7 +70,7 @@ export default function FinalizeApplicationPage({ params }: { params: { id: stri
     });
     // 1. Create a new record in `Surat_Keluar` table.
     // 2. Update the status of `Permohonan_Surat` to 'Siap Diambil'.
-    // 3. Generate the final PDF with the official number and store it.
+    // 3. Generate the final PDF with the official number and store it if needed.
     // 4. Create a log entry in `Log_Aktivitas`.
     // --- End of real app logic ---
 
@@ -81,6 +83,8 @@ export default function FinalizeApplicationPage({ params }: { params: { id: stri
         router.push('/admin/sekretaris');
     }, 1500);
   }
+
+  const showDigitalFields = printMethod === 'Full Print';
 
   return (
     <main className="space-y-8">
@@ -138,7 +142,12 @@ export default function FinalizeApplicationPage({ params }: { params: { id: stri
                   <form onSubmit={handleFinalize} className="space-y-6">
                        <div>
                           <Label htmlFor="metode_cetak">Metode Cetak</Label>
-                           <Select name="metode_cetak" defaultValue="Full Print" required>
+                           <Select 
+                              name="metode_cetak" 
+                              required 
+                              value={printMethod}
+                              onValueChange={(value: MetodeCetak) => setPrintMethod(value)}
+                            >
                                 <SelectTrigger id="metode_cetak">
                                     <SelectValue placeholder="Pilih metode..." />
                                 </SelectTrigger>
@@ -149,35 +158,40 @@ export default function FinalizeApplicationPage({ params }: { params: { id: stri
                                 </SelectContent>
                             </Select>
                       </div>
-                      <div>
-                          <Label htmlFor="nomor_surat">Nomor Surat Resmi</Label>
-                          <Input id="nomor_surat" name="nomor_surat" placeholder={`${application.jenisSurat.kode_surat}/...`} required />
+
+                      <div className={cn("space-y-6 transition-opacity", !showDigitalFields && 'opacity-50 pointer-events-none')}>
+                        <div>
+                            <Label htmlFor="nomor_surat">Nomor Surat Resmi</Label>
+                            <Input id="nomor_surat" name="nomor_surat" placeholder={`${application.jenisSurat.kode_surat}/...`} required={showDigitalFields} disabled={!showDigitalFields}/>
+                        </div>
+                        <div>
+                            <Label htmlFor="tanggal_surat">Tanggal Surat</Label>
+                            <Input id="tanggal_surat" name="tanggal_surat" type="date" defaultValue={new Date().toISOString().split('T')[0]} required disabled={!showDigitalFields}/>
+                        </div>
+                        <div>
+                            <Label htmlFor="id_penandatangan">Penandatangan</Label>
+                            <Select name="id_penandatangan" required={showDigitalFields} disabled={!showDigitalFields}>
+                                  <SelectTrigger id="id_penandatangan">
+                                      <SelectValue placeholder="Pilih pejabat..." />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                      {signatories.map(s => (
+                                          <SelectItem key={s.id_aparat} value={s.id_aparat.toString()}>{s.nama_lengkap} ({s.jabatan})</SelectItem>
+                                      ))}
+                                  </SelectContent>
+                              </Select>
+                        </div>
                       </div>
-                       <div>
-                          <Label htmlFor="tanggal_surat">Tanggal Surat</Label>
-                          <Input id="tanggal_surat" name="tanggal_surat" type="date" defaultValue={new Date().toISOString().split('T')[0]} required />
-                      </div>
-                      <div>
-                          <Label htmlFor="id_penandatangan">Penandatangan</Label>
-                           <Select name="id_penandatangan" required>
-                                <SelectTrigger id="id_penandatangan">
-                                    <SelectValue placeholder="Pilih pejabat..." />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {signatories.map(s => (
-                                        <SelectItem key={s.id_aparat} value={s.id_aparat.toString()}>{s.nama_lengkap} ({s.jabatan})</SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                      </div>
+
                       <Separator />
+
                       <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
                          {isLoading ? (
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                           ) : (
-                            <Check className="mr-2"/>
+                            showDigitalFields ? <Check className="mr-2"/> : <Printer className="mr-2"/>
                           )}
-                        Selesaikan & Siap Diambil
+                        {showDigitalFields ? 'Selesaikan & Siap Diambil' : 'Finalisasi & Cetak'}
                       </Button>
                   </form>
                 </CardContent>
