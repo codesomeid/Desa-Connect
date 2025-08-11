@@ -5,7 +5,7 @@
 
 export type ApplicationStatus = 'Diajukan' | 'Diverifikasi' | 'Diproses' | 'Ditolak' | 'Siap Diambil' | 'Selesai';
 export type AparatJabatan = 'Admin' | 'Sekretaris' | 'Kepala Desa' | 'Super Admin';
-export type MetodeCetak = 'Full Print' | 'TTD Basah' | 'Nomor Basah';
+export type MetodeCetak = 'Full Print' | 'TTD Basah' | 'Nomor Basah' | 'TTD & Nomor Basah';
 
 // --- INTERFACES / TABLE DEFINITIONS ---
 

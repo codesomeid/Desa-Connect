@@ -36,7 +36,7 @@ function getApplicationDetails(id: string) {
 }
 
 const signatories = aparatur.filter(a => a.jabatan === 'Sekretaris' || a.jabatan === 'Kepala Desa');
-const printMethods: MetodeCetak[] = ['Full Print', 'TTD Basah', 'Nomor Basah'];
+const printMethods: MetodeCetak[] = ['Full Print', 'TTD Basah', 'Nomor Basah', 'TTD & Nomor Basah'];
 
 export default function FinalizeApplicationPage({ params }: { params: { id: string } }) {
   const router = useRouter();
@@ -136,6 +136,19 @@ export default function FinalizeApplicationPage({ params }: { params: { id: stri
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleFinalize} className="space-y-6">
+                       <div>
+                          <Label htmlFor="metode_cetak">Metode Cetak</Label>
+                           <Select name="metode_cetak" defaultValue="Full Print" required>
+                                <SelectTrigger id="metode_cetak">
+                                    <SelectValue placeholder="Pilih metode..." />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {printMethods.map(m => (
+                                        <SelectItem key={m} value={m}>{m}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                      </div>
                       <div>
                           <Label htmlFor="nomor_surat">Nomor Surat Resmi</Label>
                           <Input id="nomor_surat" name="nomor_surat" placeholder={`${application.jenisSurat.kode_surat}/...`} required />
@@ -153,19 +166,6 @@ export default function FinalizeApplicationPage({ params }: { params: { id: stri
                                 <SelectContent>
                                     {signatories.map(s => (
                                         <SelectItem key={s.id_aparat} value={s.id_aparat.toString()}>{s.nama_lengkap} ({s.jabatan})</SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                      </div>
-                       <div>
-                          <Label htmlFor="metode_cetak">Metode Cetak</Label>
-                           <Select name="metode_cetak" defaultValue="Full Print" required>
-                                <SelectTrigger id="metode_cetak">
-                                    <SelectValue placeholder="Pilih metode..." />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {printMethods.map(m => (
-                                        <SelectItem key={m} value={m}>{m}</SelectItem>
                                     ))}
                                 </SelectContent>
                             </Select>
